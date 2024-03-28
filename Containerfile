@@ -14,7 +14,17 @@ ENV USER_GID=$USER_UID
 # Debug (-x), exit on failure (-e) or variable not declared (-u)
 RUN set -eux
 
-RUN uname -m
+# Set architecture
+RUN case `uname -m` in \
+    x86_64) ARCH=amd64; ;; \
+    armv7l) ARCH=arm; ;; \
+    aarch64) ARCH=arm64; ;; \
+    ppc64le) ARCH=ppc64le; ;; \
+    s390x) ARCH=s390x; ;; \
+    *) echo "un-supported arch, exit ..."; exit 1; ;; \
+    esac && \
+    echo "export ARCH=$ARCH" > /envfile && \
+    cat /envfile
 
 # Core packages
 RUN apk add --update --no-cache \
@@ -24,23 +34,23 @@ RUN apk add --update --no-cache \
 RUN apk add --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community aws-cli=${AWSCLI_VERSION}
 
 # Helm
-RUN curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar -xz ;\
+RUN source /envfile && curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar -xz ;\
     mv linux-${ARCH}/helm /usr/bin/helm ;\
     chmod +x /usr/bin/helm ;\
     rm -rf linux-${ARCH}
 
 # Kubectl
-RUN curl -sL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl -o /usr/local/bin/kubectl && \
+RUN source /envfile && curl -sL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
 # Terraform
-RUN curl -sL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip -o terraform.zip ;\
+RUN source /envfile &&  curl -sL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip -o terraform.zip ;\
     unzip -q terraform.zip ;\
     mv terraform /usr/bin ;\
     rm terraform.zip
 
 # Terragrunt
-RUN curl -sL https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH} -o /usr/bin/terragrunt ;\
+RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH} -o /usr/bin/terragrunt ;\
     chmod +x /usr/bin/terragrunt
 
 RUN groupadd --gid $USER_GID $USERNAME ;\
