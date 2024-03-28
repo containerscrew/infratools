@@ -32,7 +32,7 @@ jobs:
           # Extract the tag name from the full reference
           TAG=$(echo "${{ github.ref }}" | sed 's|.*/||')
           echo $TAG
-          echo "::set-output name=tag::$TAG"
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
         
 
       - name: Buildah login docker.io
