@@ -2,8 +2,8 @@ name: Build 📦
 
 on:
   push:
-#    branches:
-#      - '*'
+    branches:
+      - '*'
     tags:
       - 'v*.*.*'
 
@@ -31,12 +31,13 @@ jobs:
         run: |
           # Extract the tag name from the full reference
           TAG=$(echo "${{ github.ref }}" | sed 's|.*/||')
-          echo "::set-output name=tag::$TAG"
+          echo $TAG
+          echo "{TAG}=$TAG" >> $GITHUB_OUTPUT
+        
 
       - name: Buildah login docker.io
         run: |
           buildah login -u ${{ secrets.DOCKERHUB_AUTH_USERNAME }} -p ${{ secrets.DOCKERHUB_AUTH_TOKEN }} docker.io
-
 
       # You can also use official github action from redhat: redhat-actions/buildah-build@v2
       - name: Buildah multiarch
@@ -45,6 +46,7 @@ jobs:
           buildah_format: "docker"
           #home: $CI_BUILDS_DIR
         run: |
+          echo $TAG
           buildah build --jobs=2 --layers --platform=$platform_arch --manifest buildah-bud --format=docker . 
           buildah tag localhost/buildah-bud $REPOSITORY:$TAG 
           buildah manifest rm localhost/buildah-bud
