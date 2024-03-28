@@ -11,6 +11,12 @@ jobs:
   build:
     name: Build image
     runs-on: ubuntu-latest
+    container: { image: quay.io/buildah/stable }
+    env:
+      IMAGE_TAG: ${{ github.sha }}
+      REGISTRY: docker.io
+      REPOSITORY: docker.io/containerscrew/infratools
+      REPOSITORY_CACHE: docker.io/containerscrew/buildah-cache
 
     steps:
       - uses: actions/checkout@v4
@@ -20,13 +26,31 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static  
+  
+      - name: Buildah login docker.io
+        run: |
+          buildah login -u ${{ secrets.DOCKERHUB_AUTH_USERNAME }} -p ${{ secrets.DOCKERHUB_AUTH_TOKEN }} docker.io
 
-      - name: Buildah Action
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: docker.io/containerscrew/infratools
-          tags: v1.0.0 ${{ github.sha }}
-          containerfiles: |
-            ./Containerfile
-          build-args: |
-            arch=arm64
+      # You can use official github action from redhat: redhat-actions/buildah-build@v2
+      - name: Buildah multiarch
+        env:
+          platform_arch: linux/arm64,linux/amd64
+          buildah_format: "docker"
+          #home: $CI_BUILDS_DIR
+        run: |
+          echo "test"
+#          buildah build --jobs=2 --layers --cache-ttl 24h --cache-to $REPOSITORY_CACHE --cache-from $REPOSITORY_CACHE --platform=$platform_arch --manifest buildah-bud --format=docker .
+#          buildah tag localhost/buildah-bud $REPOSITORY:$IMAGE_TAG
+#          buildah manifest rm localhost/buildah-bud
+#          buildah manifest push --all $REPOSITORY:$IMAGE_TAG docker://$REPOSITORY:$IMAGE_TAG
+#          buildah logout $REGISTRY
+
+#      - name: Buildah Action
+#        uses: redhat-actions/buildah-build@v2
+#        with:
+#          image: docker.io/containerscrew/infratools
+#          tags: v1.0.0 ${{ github.sha }}
+#          containerfiles: |
+#            ./Containerfile
+#          build-args: |
+#            arch=arm64
