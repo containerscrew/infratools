@@ -6,7 +6,6 @@ ARG KUBECTL_VERSION=1.26.0
 ARG TERRAFORM_VERSION=1.6.4
 ARG TERRAGRUNT_VERSION=0.53.8
 ARG AWSCLI_VERSION=2.15.14-r0
-#ARG ARCH="amd64"
 ENV USERNAME=infratools
 ENV USER_UID=1000
 ENV USER_GID=$USER_UID
@@ -56,6 +55,6 @@ RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/relea
 RUN groupadd --gid $USER_GID $USERNAME ;\
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash
 
-USER infratools
-WORKDIR /home/infratools
+USER $USERNAME
+WORKDIR /app
 COPY .bashrc .bashrc

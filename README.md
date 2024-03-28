@@ -4,10 +4,10 @@ How many times do you need a container image with tools like `terraform, helm, k
 
 # Architecture
 
-| Arch    | Supported |
-|---------|----------|
-| amd64   | ✅        |
-| arm64   | ❌         |
+| Arch    | Supported | Tested |
+|---------|----------|--------|
+| amd64   | ✅        | ✅        |
+| arm64   | ✅         | ❌         |
 
 
 # Available tools
