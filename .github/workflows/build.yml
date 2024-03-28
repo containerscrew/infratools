@@ -11,7 +11,7 @@ jobs:
   build:
     name: Build image
     runs-on: ubuntu-latest
-    container: { image: quay.io/buildah/stable }
+    #container: { image: quay.io/buildah/stable }
     env:
       IMAGE_TAG: ${{ github.sha }}
       REGISTRY: docker.io
@@ -26,12 +26,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static  
-  
+
       - name: Buildah login docker.io
+        uses: quay.io/buildah/stable
         run: |
           buildah login -u ${{ secrets.DOCKERHUB_AUTH_USERNAME }} -p ${{ secrets.DOCKERHUB_AUTH_TOKEN }} docker.io
 
-      # You can use official github action from redhat: redhat-actions/buildah-build@v2
+      # You can also use official github action from redhat: redhat-actions/buildah-build@v2
       - name: Buildah multiarch
         env:
           platform_arch: linux/arm64,linux/amd64
