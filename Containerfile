@@ -6,13 +6,15 @@ ARG KUBECTL_VERSION=1.26.0
 ARG TERRAFORM_VERSION=1.6.4
 ARG TERRAGRUNT_VERSION=0.53.8
 ARG AWSCLI_VERSION=2.15.14-r0
-ARG ARCH="amd64"
+#ARG ARCH="amd64"
 ENV USERNAME=infratools
 ENV USER_UID=1000
 ENV USER_GID=$USER_UID
 
 # Debug (-x), exit on failure (-e) or variable not declared (-u)
 RUN set -eux
+
+RUN uname -m
 
 # Core packages
 RUN apk add --update --no-cache \
