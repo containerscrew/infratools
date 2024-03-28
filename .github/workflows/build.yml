@@ -14,12 +14,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Buildah Action
+      - name: Buildah Action - amd64
         uses: redhat-actions/buildah-build@v2
         with:
-          image: docker.io/containerscrew/infratools
-          tags: v1.0.0 ${{ github.sha }}
+          image: docker.io/containerscrew/infratools:amd64-v1.0.0
           containerfiles: |
             ./Containerfile
-#          build-args: |
-#            some_arg=some_value
+          args: --arch amd64
+
+      - name: Buildah Action - arm64
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: docker.io/containerscrew/infratools:arm64-v1.0.0
+          containerfiles: |
+            ./Containerfile
+          args: --arch arm64
