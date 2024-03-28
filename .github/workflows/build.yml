@@ -17,9 +17,9 @@ jobs:
       - name: Buildah Action
         uses: redhat-actions/buildah-build@v2
         with:
-          image: my-new-image
-          tags: v1 ${{ github.sha }}
+          image: docker.io/containerscrew/infratools
+          tags: v1.0.0 ${{ github.sha }}
           containerfiles: |
             ./Containerfile
-          build-args: |
-            some_arg=some_value
+#          build-args: |
+#            some_arg=some_value
