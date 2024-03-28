@@ -11,12 +11,10 @@ jobs:
   build:
     name: Build image
     runs-on: ubuntu-latest
-    #container: { image: quay.io/buildah/stable }
     env:
       IMAGE_TAG: ${{ github.sha }}
       REGISTRY: docker.io
       REPOSITORY: docker.io/containerscrew/infratools
-      REPOSITORY_CACHE: docker.io/containerscrew/buildah-cache
 
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +36,7 @@ jobs:
           buildah_format: "docker"
           #home: $CI_BUILDS_DIR
         run: |
-          buildah build --jobs=2 --layers --cache-ttl 24h --cache-to $REPOSITORY_CACHE --cache-from $REPOSITORY_CACHE --platform=$platform_arch --manifest buildah-bud --format=docker .
+          buildah build --jobs=2 --layers --platform=$platform_arch --manifest buildah-bud --format=docker .
           buildah tag localhost/buildah-bud $REPOSITORY:$IMAGE_TAG
           buildah manifest rm localhost/buildah-bud
           buildah manifest push --all $REPOSITORY:$IMAGE_TAG docker://$REPOSITORY:$IMAGE_TAG
