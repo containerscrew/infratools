@@ -38,12 +38,11 @@ jobs:
           buildah_format: "docker"
           #home: $CI_BUILDS_DIR
         run: |
-          echo "test"
-#          buildah build --jobs=2 --layers --cache-ttl 24h --cache-to $REPOSITORY_CACHE --cache-from $REPOSITORY_CACHE --platform=$platform_arch --manifest buildah-bud --format=docker .
-#          buildah tag localhost/buildah-bud $REPOSITORY:$IMAGE_TAG
-#          buildah manifest rm localhost/buildah-bud
-#          buildah manifest push --all $REPOSITORY:$IMAGE_TAG docker://$REPOSITORY:$IMAGE_TAG
-#          buildah logout $REGISTRY
+          buildah build --jobs=2 --layers --cache-ttl 24h --cache-to $REPOSITORY_CACHE --cache-from $REPOSITORY_CACHE --platform=$platform_arch --manifest buildah-bud --format=docker .
+          buildah tag localhost/buildah-bud $REPOSITORY:$IMAGE_TAG
+          buildah manifest rm localhost/buildah-bud
+          buildah manifest push --all $REPOSITORY:$IMAGE_TAG docker://$REPOSITORY:$IMAGE_TAG
+          buildah logout $REGISTRY
 
 #      - name: Buildah Action
 #        uses: redhat-actions/buildah-build@v2
