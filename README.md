@@ -47,6 +47,10 @@ How many times do you need a container image with tools like `terraform, helm, k
 podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.0.0 # use the version you need
 ```
 
+# CHANGELOG
+
+Pending to add changelog to track every new git tag is created, which versions are included.
+
 # LICENSE
 
 [LICENSE](./LICENSE)
