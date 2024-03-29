@@ -16,6 +16,8 @@
 
 How many times do you need a container image with tools like `terraform, helm, kubectl, aws cli, terragrunt`... among many others? Aren't you tired of having to maintain all of them in each repository, instead of having one **"general"** one that can be used in multiple repos?
 
+**Available tags:** https://hub.docker.com/repository/docker/containerscrew/infratools/general 
+
 # Architecture
 
 | Arch    | Supported | Tested |
