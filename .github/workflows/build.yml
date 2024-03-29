@@ -2,13 +2,12 @@ name: Build 📦
 
 on:
   push:
-    branches:
-      - '*'
+#    branches:
+#      - '*'
     tags:
       - 'v*.*.*'
 
 env:
-  platform_arch: linux/arm64,linux/amd64
   buildah_format: "docker"
   #IMAGE_TAG: ${{ github.sha }}
   REGISTRY: docker.io
@@ -43,11 +42,9 @@ jobs:
       # You can also use official github action from redhat: redhat-actions/buildah-build@v2
       - name: Buildah multiarch
         run: |
-          uname -m
           buildah manifest create multiarch
           buildah bud --jobs=0 --layers --arch amd64 --manifest multiarch --format=docker -f Containerfile .
           buildah bud --jobs=0 --layers --arch arm64 --manifest multiarch --format=docker -f Containerfile .
-          buildah manifest inspect localhost/multiarch
-          buildah manifest push --all localhost/multiarch docker://docker.io/containerscrew/infratools:v1.0.0
+          buildah manifest push --all localhost/multiarch docker://$REPOSITORY:$IMAGE_TAG
           buildah manifest rm localhost/multiarch
           buildah logout $REGISTRY
