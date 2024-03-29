@@ -58,3 +58,4 @@ RUN groupadd --gid $USER_GID $USERNAME ;\
 USER $USERNAME
 WORKDIR /home/$USERNAME
 COPY .bashrc .bashrc
+ENTRYPOINT ["/bin/bash"]

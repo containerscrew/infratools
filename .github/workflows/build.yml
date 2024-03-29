@@ -7,17 +7,19 @@ on:
     tags:
       - 'v*.*.*'
 
+env:
+  buildah_format: "docker"
+  #IMAGE_TAG: ${{ github.sha }}
+  REGISTRY: docker.io
+  REPOSITORY: docker.io/containerscrew/infratools
+
 jobs:
   build:
     name: Build image
     runs-on: ubuntu-latest
-    env:
-      #IMAGE_TAG: ${{ github.sha }}
-      REGISTRY: docker.io
-      REPOSITORY: docker.io/containerscrew/infratools
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Git checkout
+        uses: actions/checkout@v4
 
       # For multiarch
       - name: Install qemu dependency
@@ -39,12 +41,10 @@ jobs:
 
       # You can also use official github action from redhat: redhat-actions/buildah-build@v2
       - name: Buildah multiarch
-        env:
-          #platform_arch: linux/arm64,linux/amd64
-          buildah_format: "docker"
         run: |
-          echo $IMAGE_TAG
-          buildah bud --jobs=2 --platform=linux/arm64,linux/amd64 --manifest multiarch --format=docker -f Containerfile .
+          uname -m
+          buildah manifest create multiarch
+          buildah bud --jobs=2 --layers --all-platforms --manifest multiarch --format=docker -f Containerfile .
           buildah manifest push --all localhost/multiarch docker://docker.io/containerscrew/infratools:v1.0.0
           buildah manifest inspect localhost/multiarch
           buildah manifest rm localhost/multiarch
