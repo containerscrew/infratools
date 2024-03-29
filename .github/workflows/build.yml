@@ -45,7 +45,8 @@ jobs:
         run: |
           uname -m
           buildah manifest create multiarch
-          buildah bud --jobs=2 --layers --platform=$platform_arch --manifest multiarch --format=docker -f Containerfile .
+          buildah bud --jobs=0 --layers --arch amd64 --manifest multiarch --format=docker -f Containerfile .
+          buildah bud --jobs=0 --layers --arch arm64 --manifest multiarch --format=docker -f Containerfile .
           buildah manifest inspect localhost/multiarch
           buildah manifest push --all localhost/multiarch docker://docker.io/containerscrew/infratools:v1.0.0
           buildah manifest rm localhost/multiarch
