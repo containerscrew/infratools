@@ -44,8 +44,7 @@ jobs:
           buildah_format: "docker"
         run: |
           echo $IMAGE_TAG
-          buildah build --jobs=2 --layers --platform=$platform_arch --manifest buildah-bud --format=docker . 
-          buildah tag localhost/buildah-bud $REPOSITORY:$IMAGE_TAG
-          buildah manifest rm localhost/buildah-bud
-          buildah manifest push --all $REPOSITORY:$IMAGE_TAG docker://$REPOSITORY:$IMAGE_TAG
+          buildah bud --jobs=2 --platform=$platform_arch --manifest multiarch --format=docker -f Containerfile .
+          buildah manifest push --all localhost/multiarch docker://docker.io/containerscrew/infratools:v1.0.0
+          buildah manifest rm localhost/multiarch
           buildah logout $REGISTRY
