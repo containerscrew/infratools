@@ -56,5 +56,5 @@ RUN groupadd --gid $USER_GID $USERNAME ;\
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash
 
 USER $USERNAME
-WORKDIR /app
+WORKDIR /home/$USERNAME
 COPY .bashrc .bashrc

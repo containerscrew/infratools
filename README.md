@@ -20,4 +20,10 @@ How many times do you need a container image with tools like `terraform, helm, k
 | Helm       |   ✅      |
 | AWS CLI    |   ✅      |
 
-> AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, visit: https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=
+> AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
+
+# Running locally
+
+```shell
+podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.0.0 # use the version you need
+```

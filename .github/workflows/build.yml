@@ -2,8 +2,8 @@ name: Build 📦
 
 on:
   push:
-#    branches:
-#      - 'develop'
+    branches:
+      - 'develop'
     tags:
       - 'v*.*.*'
 
@@ -30,8 +30,8 @@ jobs:
         id: set_tag
         run: |
           # Extract the tag name from the full reference
-          TAG=$(echo "${{ github.ref }}" | sed 's|.*/||')
-          echo "TAG=$TAG" >> "$GITHUB_ENV"
+          IMAGE_TAG=$(echo "${{ github.ref }}" | sed 's|.*/||')
+          echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_ENV"
 
       - name: Buildah login docker.io
         run: |
@@ -43,9 +43,9 @@ jobs:
           platform_arch: linux/arm64,linux/amd64
           buildah_format: "docker"
         run: |
-          echo $TAG
+          echo $IMAGE_TAG
           buildah build --jobs=2 --layers --platform=$platform_arch --manifest buildah-bud --format=docker . 
-          buildah tag localhost/buildah-bud $REPOSITORY:$TAG 
+          buildah tag localhost/buildah-bud $REPOSITORY:$IMAGE_TAG
           buildah manifest rm localhost/buildah-bud
-          buildah manifest push --all $REPOSITORY:$TAG docker://$REPOSITORY:$TAG
+          buildah manifest push --all $REPOSITORY:$IMAGE_TAG docker://$REPOSITORY:$IMAGE_TAG
           buildah logout $REGISTRY
