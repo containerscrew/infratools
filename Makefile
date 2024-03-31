@@ -10,5 +10,9 @@ doctoc: ## Create table of contents with doctoc
 build-image: ## Build the image using podman
 	podman build -t docker.io/containerscrew/infratools:test .
 
+local-run: ## Run the image locally
+	podman rm -fv infratools
+	podman run --rm -it --name infratools docker.io/containerscrew/infratools:test
+
 hadolint: ## Run hadolint
 	hadolint Containerfile

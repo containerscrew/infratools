@@ -31,7 +31,7 @@ RUN case $(uname -m) in \
 
 # Core packages
 RUN apk add --update --no-cache \
-    make ca-certificates bash jq zip shadow curl git
+    make ca-certificates bash jq zip shadow curl git vim
 
 # AWS CLI
 RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community aws-cli=${AWSCLI_VERSION}
