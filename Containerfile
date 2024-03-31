@@ -6,6 +6,7 @@ ARG KUBECTL_VERSION=1.26.0
 ARG TERRAFORM_VERSION=1.6.4
 ARG TERRAGRUNT_VERSION=0.53.8
 ARG AWSCLI_VERSION=2.15.14-r0
+ARG TFTOOLS_VERSION="v0.8.0"
 ENV USERNAME=infratools
 ENV USER_UID=1000
 ENV USER_GID=$USER_UID
@@ -56,7 +57,7 @@ RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/relea
     chmod +x /usr/bin/terragrunt
 
 # Install tftools
-RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | bash
+RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | sh -s -- -v "$TFTOOLS_VERSION"
 
 RUN groupadd --gid $USER_GID $USERNAME ;\
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash
