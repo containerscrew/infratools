@@ -13,8 +13,11 @@ ENV USER_GID=$USER_UID
 # Debug (-x), exit on failure (-e) or variable not declared (-u)
 RUN set -eux
 
+# hadolint ignore=DL3018
+# hadolint global ignore=DL3018,DL4006
+
 # Set architecture
-RUN case `uname -m` in \
+RUN case $(uname -m) in \
     x86_64) ARCH=amd64; ;; \
     armv7l) ARCH=arm; ;; \
     aarch64) ARCH=arm64; ;; \
@@ -27,10 +30,10 @@ RUN case `uname -m` in \
 
 # Core packages
 RUN apk add --update --no-cache \
-    make ca-certificates bash jq zip shadow curl zip git
+    make ca-certificates bash jq zip shadow curl git
 
 # AWS CLI
-RUN apk add --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community aws-cli=${AWSCLI_VERSION}
+RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community aws-cli=${AWSCLI_VERSION}
 
 # Helm
 RUN source /envfile && curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar -xz ;\
@@ -43,7 +46,7 @@ RUN source /envfile && curl -sL https://storage.googleapis.com/kubernetes-releas
     chmod +x /usr/local/bin/kubectl
 
 # Terraform
-RUN source /envfile &&  curl -sL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip -o terraform.zip ;\
+RUN source /envfile && curl -sL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip -o terraform.zip ;\
     unzip -q terraform.zip ;\
     mv terraform /usr/bin ;\
     rm terraform.zip
@@ -51,6 +54,9 @@ RUN source /envfile &&  curl -sL https://releases.hashicorp.com/terraform/${TERR
 # Terragrunt
 RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH} -o /usr/bin/terragrunt ;\
     chmod +x /usr/bin/terragrunt
+
+# Install tftools
+RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | bash
 
 RUN groupadd --gid $USER_GID $USERNAME ;\
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash
