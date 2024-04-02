@@ -4,6 +4,24 @@
 <p align="center">Container image with infra tools (terraform, terragrunt, aws cli, helm, kubectl...). Useful for CI/CD.</p>
 </p>
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Badges](#badges)
+- [About](#about)
+- [Available tools](#available-tools)
+  - [Dynamically change terraform version](#dynamically-change-terraform-version)
+  - [Versioning](#versioning)
+- [Architecture](#architecture)
+- [Running locally](#running-locally)
+- [Example](#example)
+- [TO DO](#to-do)
+- [CHANGELOG](#changelog)
+- [LICENSE](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Badges
 
 ![Build Status](https://github.com/containerscrew/infratools/actions/workflows/build.yml/badge.svg)
@@ -31,6 +49,13 @@ How many times do you need a container image with tools like `terraform, helm, k
 | [tftools](https://github.com/containerscrew/tftools) |   ✅      |
 | [tfenv](https://github.com/tfutils/tfenv)   |   ✅      |
 
+## Versioning
+
+> Alpine core packages: https://pkgs.alpinelinux.org/packages
+
+> AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
+
+> For every new version, a new git tag will be created. You can see versioning inside [Containerfile](./Containerfile)
 
 ## Dynamically change terraform version
 
@@ -44,14 +69,6 @@ Or change it yourself, for example, within a pipeline:
 tfenv use 1.5.5
 ```
 
-## Versioning
-
-> Alpine core packages: https://pkgs.alpinelinux.org/packages
-
-> AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
-
-> For every new version, a new git tag will be created. You can see versioning inside [Containerfile](./Containerfile)
-
 # Architecture
 
 | Arch    | Supported | Tested |
@@ -63,8 +80,10 @@ tfenv use 1.5.5
 # Running locally
 
 ```shell
-podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.0.0 # use the version you need
+podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.0.0
 ```
+
+> Use the version([tag](https://github.com/containerscrew/infratools/tags)) you need.
 
 # Example
 
