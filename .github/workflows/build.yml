@@ -8,7 +8,7 @@ on:
       - 'v*.*.*'
 
 env:
-  buildah_format: "docker"
+  BUILDAH_FORMAT: "docker"
   #IMAGE_TAG: ${{ github.sha }}
   REGISTRY: docker.io
   REPOSITORY: docker.io/containerscrew/infratools

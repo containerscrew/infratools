@@ -19,24 +19,39 @@ How many times do you need a container image with tools like `terraform, helm, k
 
 **Available tags:** https://hub.docker.com/repository/docker/containerscrew/infratools/general 
 
+# Available tools
+
+| Tool                                                 | Available |
+|------------------------------------------------------|----------|
+| Terraform                                            |   ✅      |
+| Terragrunt                                           |   ✅      |
+| Kubectl                                              |   ✅      |
+| Helm                                                 |   ✅      |
+| AWS CLI                                              |   ✅      |
+| [tftools](https://github.com/containerscrew/tftools) |   ✅      |
+| [tfenv](https://github.com/tfutils/tfenv)   |   ✅      |
+
+
+## Dynamically change terraform version
+
+> [!TIP]
+> Terraform is installed using tfenv. If you have the `.terraform-version` file in your terraform/terragrunt repository, `tfenv` should detect the version and install it automatically.
+
+> [!TIP]
+> By default a version of terraform will always come pre-installed in the container, but if you need to change it dynamically, you can use `tfenv`.
+
+For example, inside the pipeline:
+
+```shell
+tfenv use 1.5.5
+```
+
 # Architecture
 
 | Arch    | Supported | Tested |
 |---------|----------|--------|
 | amd64   | ✅        | ✅        |
 | arm64   | ✅         | ✅         |
-
-
-# Available tools
-
-| Tool        | Available |
-|-------------|----------|
-| Terraform   |   ✅      |
-| Terragrunt  |   ✅      |
-| Kubectl     |   ✅      |
-| Helm        |   ✅      |
-| AWS CLI     |   ✅      |
-| [Tftools](https://github.com/containerscrew/tftools) |   ✅      |
 
 > Alpine core packages: https://pkgs.alpinelinux.org/packages
 

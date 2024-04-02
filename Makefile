@@ -8,7 +8,7 @@ doctoc: ## Create table of contents with doctoc
 	doctoc .
 
 build-image: ## Build the image using podman
-	podman build -t docker.io/containerscrew/infratools:test .
+	podman build --format docker -t docker.io/containerscrew/infratools:test .
 
 local-run: ## Run the image locally
 	podman rm -fv infratools

@@ -7,9 +7,10 @@ ARG TERRAFORM_VERSION=1.6.4
 ARG TERRAGRUNT_VERSION=0.53.8
 ARG AWSCLI_VERSION=2.15.14-r0
 ARG TFTOOLS_VERSION="v0.8.0"
-ENV USERNAME=infratools
+ENV USERNAME="infratools"
 ENV USER_UID=1000
 ENV USER_GID=$USER_UID
+ENV USER_HOME="/home/infratools"
 
 # Debug (-x), exit on failure (-e) or variable not declared (-u)
 RUN set -eux
@@ -33,6 +34,10 @@ RUN case $(uname -m) in \
 RUN apk add --update --no-cache \
     make ca-certificates bash jq zip shadow curl git vim bind-tools
 
+# Rootless user
+RUN groupadd --gid $USER_GID $USERNAME ;\
+    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash
+
 # AWS CLI
 RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community aws-cli=${AWSCLI_VERSION}
 
@@ -46,11 +51,11 @@ RUN source /envfile && curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-
 RUN source /envfile && curl -sL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
-# Terraform
-RUN source /envfile && curl -sL https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip -o terraform.zip ;\
-    unzip -q terraform.zip ;\
-    mv terraform /usr/bin ;\
-    rm terraform.zip
+# Terraform using tfenv
+RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;\
+    ln -s $USER_HOME/.tfenv/bin/* /usr/local/bin ;\
+    tfenv use ${TERRAFORM_VERSION} ;\
+    chown -R $USERNAME:$USERNAME $USER_HOME/.tfenv/
 
 # Terragrunt
 RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH} -o /usr/bin/terragrunt ;\
@@ -59,10 +64,7 @@ RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/relea
 # Install tftools
 RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | sh -s -- -v "$TFTOOLS_VERSION"
 
-RUN groupadd --gid $USER_GID $USERNAME ;\
-    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash
-
 USER $USERNAME
-WORKDIR /home/$USERNAME
+WORKDIR $USER_HOME
 COPY .bashrc .bashrc
 ENTRYPOINT ["/bin/bash"]
