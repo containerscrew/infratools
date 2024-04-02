@@ -44,6 +44,14 @@ Or change it yourself, for example, within a pipeline:
 tfenv use 1.5.5
 ```
 
+## Versioning
+
+> Alpine core packages: https://pkgs.alpinelinux.org/packages
+
+> AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
+
+> For every new version, a new git tag will be created. You can see versioning inside [Containerfile](./Containerfile)
+
 # Architecture
 
 | Arch    | Supported | Tested |
@@ -51,11 +59,6 @@ tfenv use 1.5.5
 | amd64   | ✅        | ✅        |
 | arm64   | ✅         | ✅         |
 
-> Alpine core packages: https://pkgs.alpinelinux.org/packages
-
-> AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
-
-> For every new version, a new git tag will be created. You can see versioning inside [Containerfile](./Containerfile)
 
 # Running locally
 
