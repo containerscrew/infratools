@@ -67,4 +67,5 @@ RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/cont
 USER $USERNAME
 WORKDIR $USER_HOME
 COPY .bashrc .bashrc
+COPY bin/* /usr/local/bin
 ENTRYPOINT ["/bin/bash"]

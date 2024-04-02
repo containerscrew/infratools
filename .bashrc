@@ -116,23 +116,5 @@ if ! shopt -oq posix; then
   fi
 fi
 
-tfsum() {
-  if [ -z "$1" ]; then
-    echo "You should type 'tfsum terraform|terragrunt'"
-    exit 1
-  fi
-
-  echo -en "Starting tf summary... Please wait\n"
-
-  if [ -n "$2" ] && [ "$2" == "-v" ]; then
-    "$1" plan -out plan.tfplan
-  else
-    "$1" plan -out plan.tfplan 1> /dev/null
-  fi
-
-  "$1" show -json plan.tfplan | tftools summarize --show-tags
-  if [ -f "plan.tfplan" ]; then rm plan.tfplan; fi
-}
-
 # Custom prompt
 PS1="\[\033[38;5;92m\]\u\[\033[0m\]@\[\033[38;5;27m\]container-tools \[\033[0m\]\w \[\033[38;5;40m\]>\[\033[0m\]"
