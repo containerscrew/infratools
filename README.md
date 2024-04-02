@@ -38,7 +38,7 @@ How many times do you need a container image with tools like `terraform, helm, k
 | AWS CLI     |   ✅      |
 | [Tftools](https://github.com/containerscrew/tftools) |   ✅      |
 
-> Alpine core packages are pinned. https://pkgs.alpinelinux.org/packages
+> Alpine core packages: https://pkgs.alpinelinux.org/packages
 
 > AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
 
