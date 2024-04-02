@@ -35,12 +35,10 @@ How many times do you need a container image with tools like `terraform, helm, k
 ## Dynamically change terraform version
 
 > [!TIP]
-> Terraform is installed using tfenv. If you have the `.terraform-version` file in your terraform/terragrunt repository, `tfenv` should detect the version and install it automatically.
+> By default, a version of terraform is installed using `tfenv`. If you have the `.terraform-version` file in your `terraform/terragrunt` repository, `tfenv` should detect the version and install it automatically.
 
-> [!TIP]
-> By default a version of terraform will always come pre-installed in the container, but if you need to change it dynamically, you can use `tfenv`.
 
-For example, inside the pipeline:
+Or change it yourself, for example, within a pipeline:
 
 ```shell
 tfenv use 1.5.5
@@ -72,6 +70,7 @@ podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.0.0
 # TO DO 
 
 * Add also tag `latest` in docker hub images.
+* Add other dynamic version switchers for other tools (tgswitch, kubectl...)
 
 # CHANGELOG
 
