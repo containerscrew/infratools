@@ -14,6 +14,8 @@
   - [Versioning](#versioning)
   - [Dynamically change terraform version](#dynamically-change-terraform-version)
 - [Architecture](#architecture)
+- [Image security scan with Trivy](#image-security-scan-with-trivy)
+  - [Local trivy scan](#local-trivy-scan)
 - [Running locally](#running-locally)
 - [Example](#example)
 - [TO DO](#to-do)
