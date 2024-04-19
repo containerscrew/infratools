@@ -81,7 +81,7 @@ tfenv use 1.5.5
 # Running locally
 
 ```shell
-podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.0.0
+podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.4.1
 ```
 
 > Use the version([tag](https://github.com/containerscrew/infratools/tags)) you need.
@@ -94,6 +94,7 @@ podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.0.0
 
 * Add also tag `latest` in docker hub images.
 * Add other dynamic version switchers for other tools (tgswitch, kubectl...)
+* Automatic pipeline cron with image scan & automatic build
 
 # CHANGELOG
 
