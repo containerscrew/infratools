@@ -2,8 +2,6 @@ name: Image Scan CodeQL 🕷️
 
 on:
   push:
-#    branches:
-#      - '*'
     tags:
       - 'v*.*.*'
 
@@ -13,9 +11,6 @@ permissions:
   security-events: write
 
 env:
-  BUILDAH_FORMAT: "docker"
-  #IMAGE_TAG: ${{ github.sha }}
-  REGISTRY: docker.io
   REPOSITORY: docker.io/containerscrew/infratools
 
 jobs:
@@ -41,7 +36,6 @@ jobs:
           output: 'trivy-results.sarif'
           vuln-type: 'os,library'
           ignore-unfixed: false
-          #severity: 'CRITICAL,HIGH'
         env:
           TRIVY_USERNAME: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
           TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}

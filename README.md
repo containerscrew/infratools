@@ -78,6 +78,20 @@ tfenv use 1.5.5
 | amd64   | ✅        | ✅        |
 | arm64   | ✅         | ✅         |
 
+# Image security scan with Trivy
+
+[This pipeline](./.github/workflows/scan-image.yml) uses [trivy github action](https://github.com/aquasecurity/trivy-action) to scan the latest tag uploaded to Docker Hub. 
+
+Take a look to the [official repo](https://github.com/aquasecurity/trivy)
+
+## Local trivy scan
+
+[Install trivy](https://aquasecurity.github.io/trivy/test/getting-started/installation/)
+
+```shell
+make build-image # podman build --format docker -t docker.io/containerscrew/infratools:test .
+make trivy-scan # trivy image docker.io/containerscrew/infratools:test
+```
 
 # Running locally
 
