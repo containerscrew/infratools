@@ -31,7 +31,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${REPOSITORY}:${LATEST_TAG}
+          image-ref: 'docker.io/containerscrew/infratools:v1.4.1'
           format: 'sarif'
           output: 'trivy-results.sarif'
           vuln-type: 'os,library'
