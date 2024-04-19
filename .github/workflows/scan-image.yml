@@ -28,10 +28,15 @@ jobs:
           LATEST_TAG=$(curl -s https://api.github.com/repos/containerscrew/infratools/tags | jq -r '.[0].name')
           echo "LATEST_TAG=$LATEST_TAG" >> "$GITHUB_ENV"
 
+      - name: Generate tarball from image
+        run: |
+          docker pull $REPOSITORY:$LATEST_TAG
+          docker save -o image-to-scan.tar $REPOSITORY:$LATEST_TAG
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/containerscrew/infratools:v1.4.1'
+          input: /github/workspace/image-to-scan.tar
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
