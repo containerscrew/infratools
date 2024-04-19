@@ -1,15 +1,17 @@
-name: Build 📦
+name: Build and scan 🕷️📦
 
 on:
   push:
-#    branches:
-#      - '*'
     tags:
       - 'v*.*.*'
 
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
 env:
   BUILDAH_FORMAT: "docker"
-  #IMAGE_TAG: ${{ github.sha }}
   REGISTRY: docker.io
   REPOSITORY: docker.io/containerscrew/infratools
 
@@ -48,3 +50,20 @@ jobs:
           buildah manifest push --all localhost/multiarch docker://$REPOSITORY:$IMAGE_TAG
           buildah manifest rm localhost/multiarch
           buildah logout $REGISTRY
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{env.REPOSITORY}}:${{env.IMAGE_TAG}}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          vuln-type: 'os,library'
+          ignore-unfixed: false
+        env:
+          TRIVY_USERNAME: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
+          TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'

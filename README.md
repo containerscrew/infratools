@@ -29,7 +29,6 @@
 ![Build Status](https://github.com/containerscrew/infratools/actions/workflows/build.yml/badge.svg)
 ![Build Status](https://github.com/containerscrew/infratools/actions/workflows/hadolint.yml/badge.svg)
 [![License](https://img.shields.io/github/license/containerscrew/infratools)](/LICENSE)
-![CodeQL](https://github.com/containerscrew/infratools/actions/workflows/scan-image.yml/badge.svg?branch=main&event=push)
 ![Latest Tag](https://img.shields.io/github/v/tag/containerscrew/infratools?sort=semver)
 
 [![DockerHub Badge](http://dockeri.co/image/containerscrew/infratools)](https://hub.docker.com/r/containerscrew/infratools/)
@@ -82,9 +81,9 @@ tfenv use 1.5.5
 
 # Image security scan with Trivy
 
-[This pipeline](./.github/workflows/scan-image.yml) uses [trivy github action](https://github.com/aquasecurity/trivy-action) to scan the latest tag uploaded to Docker Hub. 
+This image uses [trivy github action](https://github.com/aquasecurity/trivy-action) as a tool for security scanning. 
 
-Take a look to the [official repo](https://github.com/aquasecurity/trivy)
+Take a look to the [official repo](https://github.com/aquasecurity/trivy) of Trivy.
 
 ## Local trivy scan
 
