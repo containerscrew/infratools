@@ -1,11 +1,11 @@
-name: Image Scan 🕷️
+name: Image Scan CodeQL 🕷️
 
 on:
   push:
-    branches:
-      - '*'
+#    branches:
+#      - '*'
     tags:
-      - '*'
+      - 'v*.*.*'
 
 permissions:
   actions: read
@@ -41,7 +41,7 @@ jobs:
           output: 'trivy-results.sarif'
           vuln-type: 'os,library'
           ignore-unfixed: false
-          severity: 'CRITICAL,HIGH'
+          #severity: 'CRITICAL,HIGH'
         env:
           TRIVY_USERNAME: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
           TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
