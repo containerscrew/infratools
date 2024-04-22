@@ -72,5 +72,3 @@ else
   # shellcheck disable=SC2086
   $tf_command "$tf_action" $tf_params
 fi
-
-

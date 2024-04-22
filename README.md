@@ -17,7 +17,10 @@
 - [Image security scan with Trivy](#image-security-scan-with-trivy)
   - [Local trivy scan](#local-trivy-scan)
 - [Running locally](#running-locally)
-- [Example](#example)
+  - [Rootless (podman)](#rootless-podman)
+    - [Mapping volumes with podman unshare](#mapping-volumes-with-podman-unshare)
+    - [Git errors after unshare](#git-errors-after-unshare)
+  - [Docker](#docker)
 - [TO DO](#to-do)
 - [CHANGELOG](#changelog)
 - [LICENSE](#license)
@@ -38,7 +41,7 @@
 
 How many times do you need a container image with tools like `terraform, helm, kubectl, aws cli, terragrunt`... among many others? Aren't you tired of having to maintain all of them in each repository, instead of having one **"general"** one that can be used in multiple repos?
 
-**Available tags:** https://hub.docker.com/repository/docker/containerscrew/infratools/general 
+**Available tags:** https://hub.docker.com/repository/docker/containerscrew/infratools/general
 
 # Available tools
 
@@ -81,7 +84,7 @@ tfenv use 1.5.5
 
 # Image security scan with Trivy
 
-This image uses [trivy github action](https://github.com/aquasecurity/trivy-action) as a tool for security scanning. 
+This image uses [trivy github action](https://github.com/aquasecurity/trivy-action) as a tool for security scanning.
 
 Take a look to the [official repo](https://github.com/aquasecurity/trivy) of Trivy.
 
@@ -97,16 +100,42 @@ make trivy-scan # trivy image docker.io/containerscrew/infratools:test
 # Running locally
 
 ```shell
-podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.4.1
+podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.4.2
 ```
 
 > Use the version([tag](https://github.com/containerscrew/infratools/tags)) you need.
 
-# Example
+## Rootless (podman)
+
+The container is started as a non-root user. If you map directories, by default the owner:group will be root:root (using podman). Here I leave you a link that explains how to map directories into non-root containers, and be able to write.
+
+* https://www.tutorialworks.com/podman-rootless-volumes/
+* https://stackoverflow.com/questions/75817076/no-matter-what-i-do-podman-is-mounting-volumes-as-root
+
+
+### Mapping volumes with podman unshare
+
+```shell
+cd $HOME/mycode
+podman unshare chown -R 1000:1000 $HOME/mycode
+podman run -it --rm --name infratools -v $HOME/mycode:/code.ssh:Z -w /code  docker.io/containerscrew/infratools:v1.4.2
+```
 
 ![example](./example.png)
 
-# TO DO 
+### Git errors after unshare
+
+`fatal: detected dubious ownership in repository at '$HOME/mycode'
+To add an exception for this directory, call:`
+
+```git config --global --add safe.directory $HOME/mycode```
+
+## Docker
+
+> [!IMPORTANT]
+> I guess with Docker you don't need to do any of this. Honestly I don't use Docker. If there is a problem, open an issue.
+
+# TO DO
 
 * Add also tag `latest` in docker hub images.
 * Add other dynamic version switchers for other tools (tgswitch, kubectl...)
