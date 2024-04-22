@@ -7,15 +7,16 @@ help: ## this help
 doctoc: ## Create table of contents with doctoc
 	doctoc .
 
-build-image: ## Build the image using podman
-	podman build -t docker.io/containerscrew/infratools:test .
+local-build: ## Build the image using podman
+	podman build -t localhost/infratools:test .
 
 local-run: ## Run the image locally
 	podman rm -fv infratools
-	podman run --rm -it --name infratools docker.io/containerscrew/infratools:test
+	podman run --rm -it --name infratools localhost/infratools:test
 
 trivy-scan: ## Scan image using trivy
-	trivy image docker.io/containerscrew/infratools:test
+	systemctl --user enable --now podman.socket ;\
+	trivy image localhost/infratools:test
 
 hadolint: ## Run hadolint
 	hadolint Containerfile
