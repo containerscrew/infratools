@@ -32,7 +32,8 @@ RUN case $(uname -m) in \
 
 # Core packages
 RUN apk add --update --no-cache \
-    make ca-certificates bash jq zip shadow curl git vim bind-tools aws-cli=${AWSCLI_VERSION}
+    make ca-certificates bash jq zip shadow curl git vim bind-tools aws-cli=${AWSCLI_VERSION} \
+    openssl
 
 # Rootless user
 RUN groupadd --gid $USER_GID $USERNAME ;\
