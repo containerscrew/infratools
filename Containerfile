@@ -6,7 +6,7 @@ ARG KUBECTL_VERSION=1.26.0
 ARG TERRAFORM_VERSION=1.8.1
 ARG TERRAGRUNT_VERSION=0.57.5
 ARG AWSCLI_VERSION="2.13.25-r0"
-ARG TFTOOLS_VERSION="v0.8.0"
+ARG TFTOOLS_VERSION="v0.9.0"
 ENV USERNAME="infratools"
 ENV USER_UID=1000
 ENV USER_GID=$USER_UID
@@ -65,5 +65,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/cont
 USER $USERNAME
 WORKDIR $USER_HOME
 COPY .bashrc .bashrc
-COPY bin/* /usr/local/bin
+# If using custom binaries
+#COPY bin/* /usr/local/bin
 ENTRYPOINT ["/bin/bash"]
