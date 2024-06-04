@@ -12,6 +12,7 @@ ENV USER_UID=1000
 ENV USER_GID=$USER_UID
 ENV USER_HOME="/home/infratools"
 ENV PYTHONUNBUFFERED=1
+ENV PATH="${PATH}:${USER_HOME}/.local/bin"
 
 # Debug (-x), exit on failure (-e) or variable not declared (-u)
 RUN set -eux
