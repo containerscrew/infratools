@@ -13,6 +13,10 @@
 - [Available tools](#available-tools)
   - [Versioning](#versioning)
   - [Dynamically change terraform version](#dynamically-change-terraform-version)
+  - [Installing python libraries](#installing-python-libraries)
+    - [Use pipx to install python packages/libraries](#use-pipx-to-install-python-packageslibraries)
+    - [Use venv](#use-venv)
+    - [Force installation](#force-installation)
 - [Architecture](#architecture)
 - [Image security scan with Trivy](#image-security-scan-with-trivy)
   - [Local trivy scan](#local-trivy-scan)
@@ -74,6 +78,68 @@ Or change it yourself, for example, within a pipeline:
 ```shell
 tfenv use 1.5.5
 ```
+
+## Installing python libraries
+
+You can install python libraries using `pip3`. BTW, you will see the following error:
+
+```
+× This environment is externally managed
+╰─>
+    The system-wide python installation should be maintained using the system
+    package manager (apk) only.
+
+    If the package in question is not packaged already (and hence installable via
+    "apk add py3-somepackage"), please consider installing it inside a virtual
+    environment, e.g.:
+
+    python3 -m venv /path/to/venv
+    . /path/to/venv/bin/activate
+    pip install mypackage
+
+    To exit the virtual environment, run:
+
+    deactivate
+
+    The virtual environment is not deleted, and can be re-entered by re-sourcing
+    the activate file.
+
+    To automatically manage virtual environments, consider using pipx (from the
+    pipx package).
+
+note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
+hint: See PEP 668 for the detailed specification.
+```
+
+### Use pipx to install python packages/libraries
+
+Install library + deps:
+
+```shell
+pipx install boto3 --include-deps
+```
+
+Install a package:
+
+```shell
+pipx install your-package-name # visit pypip
+```
+
+### Use venv
+
+```shell
+python3 -m venv /path/to/venv
+. /path/to/venv/bin/activate
+pip3 install mypackage
+```
+
+### Force installation
+
+```shell
+pip3 install boto3 --break-system-packages
+```
+
+
 
 # Architecture
 
