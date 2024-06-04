@@ -11,6 +11,7 @@ ENV USERNAME="infratools"
 ENV USER_UID=1000
 ENV USER_GID=$USER_UID
 ENV USER_HOME="/home/infratools"
+ENV PYTHONUNBUFFERED=1
 
 # Debug (-x), exit on failure (-e) or variable not declared (-u)
 RUN set -eux
@@ -32,8 +33,8 @@ RUN case $(uname -m) in \
 
 # Core packages
 RUN apk add --update --no-cache \
-    make ca-certificates bash jq zip shadow curl git vim bind-tools aws-cli=${AWSCLI_VERSION} \
-    openssl envsubst
+    make ca-certificates bash jq zip shadow curl git vim bind-tools python3 py3-pip \
+    openssl envsubst aws-cli=${AWSCLI_VERSION}
 
 # Rootless user
 RUN groupadd --gid $USER_GID $USERNAME ;\
