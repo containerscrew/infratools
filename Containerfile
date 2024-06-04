@@ -33,7 +33,7 @@ RUN case $(uname -m) in \
 
 # Core packages
 RUN apk add --update --no-cache \
-    make ca-certificates bash jq zip shadow curl git vim bind-tools python3 py3-pip \
+    make ca-certificates bash jq zip shadow curl git vim bind-tools python3 py3-pip pipx \
     openssl envsubst aws-cli=${AWSCLI_VERSION}
 
 # Rootless user
