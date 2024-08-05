@@ -2,9 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [1.11.0] - 2024-08-05
 
 - Add cliff config
+
+
+- Add fzf + git cliff config
 
 
 ## [1.10.0] - 2024-08-05
