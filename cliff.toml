@@ -10,7 +10,7 @@ body = """
 {% else %}\
     ## [unreleased]
 {% endif %}\
-{% for commit in commits %}
+{% for commit in commits | unique(attribute="message") %}
     - {{ commit.message | upper_first }}
 {% endfor %}\n
 """

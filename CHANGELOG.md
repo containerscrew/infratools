@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+- Update CHANGELOG.md
+
+
+- Update cliff.toml
+
+
 ## [1.11.0] - 2024-08-05
 
 - Add cliff config
@@ -87,37 +95,7 @@ All notable changes to this project will be documented in this file.
 - Wip: trivy image sec
 
 
-- Wip: trivy image sec
-
-
-- Wip: trivy image sec
-
-
-- Wip: trivy image sec
-
-
-- Wip: trivy image sec
-
-
-- Wip: trivy image sec
-
-
-- Wip: trivy image sec
-
-
-- Wip: trivy image sec
-
-
-- Update README.md
-
-
-- Update README.md
-
-
 - Update pipeline scan-image
-
-
-- Update README
 
 
 - Fix aws-cli version & update doc
@@ -131,15 +109,6 @@ All notable changes to this project will be documented in this file.
 - Update README
 
 
-- Update README
-
-
-- Update README
-
-
-- Update README
-
-
 - Fix custom binary tfsum (remove bashrc function)
 
 
@@ -149,9 +118,6 @@ All notable changes to this project will be documented in this file.
 
 
 - Add example image
-
-
-- Update README
 
 
 - Add tfenv
@@ -178,13 +144,7 @@ All notable changes to this project will be documented in this file.
 - Update README.md
 
 
-- Update README.md
-
-
 - Lint Containerfile using Hadolint
-
-
-- Update README
 
 
 - Update README
@@ -196,9 +156,6 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2024-03-29
 
 - Initial commit
-
-- Initial commit
-
 
 - Initial commit
 
@@ -236,18 +193,6 @@ All notable changes to this project will be documented in this file.
 - Testing tag
 
 
-- Testing tag
-
-
-- Testing tag
-
-
-- Testing multiarch
-
-
-- Testing multiarch
-
-
 - Fix
 
 
@@ -258,15 +203,6 @@ All notable changes to this project will be documented in this file.
 
 
 - Working with buildah
-
-
-- Working with buildah
-
-
-- Wip
-
-
-- Wip
 
 
 - Wip

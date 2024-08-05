@@ -20,3 +20,6 @@ trivy-scan: ## Scan image using trivy
 
 hadolint: ## Run hadolint
 	hadolint Containerfile
+
+generate-changelog: ## Generate changelog using git cliff
+	git cliff --output CHANGELOG.md
