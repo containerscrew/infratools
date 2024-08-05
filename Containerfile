@@ -5,7 +5,7 @@ ARG HELM_VERSION=3.13.2
 ARG KUBECTL_VERSION=1.26.0
 ARG TERRAFORM_VERSION=1.8.1
 ARG TERRAGRUNT_VERSION=0.57.5
-ARG AWSCLI_VERSION="2.13.25-r0"
+ARG AWSCLI_VERSION="2.15.14-r0"
 ARG TFTOOLS_VERSION="v0.9.0"
 ENV USERNAME="infratools"
 ENV USER_UID=1000
@@ -34,7 +34,7 @@ RUN case $(uname -m) in \
 
 # Core packages
 RUN apk add --update --no-cache \
-    make ca-certificates bash jq zip shadow curl git vim bind-tools python3 py3-pip pipx \
+    make ca-certificates bash jq zip shadow curl git vim bind-tools python3 py3-pip pipx kubectx \
     openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli
 
 # Rootless user
