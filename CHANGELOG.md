@@ -2,12 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [1.12.0] - 2024-08-06
 
 - Update CHANGELOG.md
 
 
 - Update cliff.toml
+
+
+- ♻️ Delete duplicate commit message CHANGELOG.md
+
+
+- 🎨 Change bashrc prompt to allow hostname overwrite
 
 
 ## [1.11.0] - 2024-08-05
