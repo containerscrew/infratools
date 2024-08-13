@@ -29,6 +29,8 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+![example](./example.png)
+
 # Badges
 
 ![Build Status](https://github.com/containerscrew/infratools/actions/workflows/build.yml/badge.svg)
