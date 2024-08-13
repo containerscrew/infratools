@@ -96,7 +96,7 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: false
-          tags: ${{ $REPOSITORY:$IMAGE_TAG }}, ${{ $REPOSITORY:latest }}
+          tags: test/test:latest
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
