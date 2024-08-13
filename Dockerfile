@@ -34,12 +34,12 @@ RUN case $(uname -m) in \
 
 # Core packages
 RUN apk add --update --no-cache \
-    make ca-certificates bash jq zip shadow curl git vim bind-tools python3 py3-pip pipx kubectx \
+    make ca-certificates zsh zsh-vcs jq zip shadow curl git vim bind-tools python3 py3-pip pipx kubectx \
     openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf
 
 # Rootless user
 RUN groupadd --gid $USER_GID $USERNAME ;\
-    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash
+    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/zsh
 
 # Helm
 RUN source /envfile && curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar -xz ;\
@@ -64,9 +64,14 @@ RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/relea
 # Install tftools
 RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | sh -s -- -v "$TFTOOLS_VERSION"
 
+# User actions
 USER $USERNAME
+
+# Install oh my zsh
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
 WORKDIR $USER_HOME
-COPY .bashrc .bashrc
-# If using custom binaries
-#COPY bin/* /usr/local/bin
-ENTRYPOINT ["/bin/bash"]
+
+COPY .zshrc .zshrc
+
+ENTRYPOINT ["/bin/zsh"]

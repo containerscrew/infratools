@@ -8,11 +8,12 @@ doctoc: ## Create table of contents with doctoc
 	doctoc .
 
 local-build: ## Build the image using podman
-	podman build -t localhost/infratools:test .
+	docker build -t localhost/infratools:test .
 
 local-run: ## Run the image locally
-	podman rm -fv infratools
-	podman run --rm -it --name infratools localhost/infratools:test
+	docker run --rm -it -h containertools --name infratools localhost/infratools:test
+
+local-build-run: local-build local-run ## Build and run the image locally
 
 trivy-scan: ## Scan image using trivy
 	systemctl --user enable --now podman.socket ;\

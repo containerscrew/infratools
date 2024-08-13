@@ -21,11 +21,8 @@
 - [Image security scan with Trivy](#image-security-scan-with-trivy)
   - [Local trivy scan](#local-trivy-scan)
 - [Running locally](#running-locally)
-  - [Rootless (podman)](#rootless-podman)
-    - [Mapping volumes with podman unshare](#mapping-volumes-with-podman-unshare)
-    - [Git errors after unshare](#git-errors-after-unshare)
-  - [Docker](#docker)
-- [TO DO](#to-do)
+  - [Mapping volumes to the container](#mapping-volumes-to-the-container)
+- [TODO](#todo)
 - [CHANGELOG](#changelog)
 - [LICENSE](#license)
 
@@ -58,6 +55,9 @@ How many times do you need a container image with tools like `terraform, helm, k
 | AWS CLI                                              |   ✅      |
 | [tftools](https://github.com/containerscrew/tftools) |   ✅      |
 | [tfenv](https://github.com/tfutils/tfenv)   |   ✅      |
+| [ohmyzsh](https://ohmyz.sh/)   |   ✅      |
+
+Take a look to all the available installed tools inside the [Dockerfile](./Dockerfile)
 
 ## Versioning
 
@@ -65,7 +65,7 @@ How many times do you need a container image with tools like `terraform, helm, k
 
 > AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
 
-> For every new version, a new git tag will be created. You can see versioning inside [Containerfile](./Containerfile)
+> For every new version, a new git tag will be created. You can see versioning inside [Dockerfile](./Containerfile)
 
 ## Dynamically change terraform version
 
@@ -81,9 +81,12 @@ tfenv use 1.5.5
 
 ## Installing python libraries
 
-You can install python libraries using `pip3`. BTW, you will see the following error:
-
-```
+<details>
+<summary>You can install python libraries using `pip3`. BTW, you will see the following error:</summary>
+<br>
+Error:
+<br><br>
+<pre>
 × This environment is externally managed
 ╰─>
     The system-wide python installation should be maintained using the system
@@ -109,7 +112,8 @@ You can install python libraries using `pip3`. BTW, you will see the following e
 
 note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
 hint: See PEP 668 for the detailed specification.
-```
+</pre>
+</details>
 
 ### Use pipx to install python packages/libraries
 
@@ -139,8 +143,6 @@ pip3 install mypackage
 pip3 install boto3 --break-system-packages
 ```
 
-
-
 # Architecture
 
 | Arch    | Supported | Tested |
@@ -159,49 +161,52 @@ Take a look to the [official repo](https://github.com/aquasecurity/trivy) of Tri
 [Install trivy](https://aquasecurity.github.io/trivy/test/getting-started/installation/)
 
 ```shell
-make build-image # podman build --format docker -t docker.io/containerscrew/infratools:test .
+make build-image
 make trivy-scan # trivy image docker.io/containerscrew/infratools:test
 ```
 
 # Running locally
 
 ```shell
-podman run --rm -it --name infratools docker.io/containerscrew/infratools:v1.4.2
+make local-build
+make local-run
+# Or all in one
+make local-build-run
 ```
 
 > Use the version([tag](https://github.com/containerscrew/infratools/tags)) you need.
 
-## Rootless (podman)
+## Mapping volumes to the container
 
-The container is started as a non-root user. If you map directories, by default the owner:group will be root:root (using podman). Here I leave you a link that explains how to map directories into non-root containers, and be able to write.
-
-* https://www.tutorialworks.com/podman-rootless-volumes/
-* https://stackoverflow.com/questions/75817076/no-matter-what-i-do-podman-is-mounting-volumes-as-root
-
-
-### Mapping volumes with podman unshare
+Example `run-local-container.sh`:
 
 ```shell
-cd $HOME/mycode
-podman unshare chown -R 1000:1000 $HOME/mycode
-podman run -it --rm --name infratools -v $HOME/mycode:/code.ssh:Z -w /code  docker.io/containerscrew/infratools:v1.4.2
+#!/bin/bash
+
+CONTAINER_NAME="containertools"
+CONTAINER_VERSION="v2.0.0"
+
+echo "Check if there is a running tools container..."
+if [ $(docker ps | grep ${CONTAINER_NAME} | wc -l) -gt 0 ];then
+    docker exec -ti ${CONTAINER_NAME} bash
+else
+    echo "Running infratools..."
+    docker run -ti \
+        --name ${CONTAINER_NAME} \
+        --rm \
+        -h ${CONTAINER_NAME} \
+        -v $(pwd)/:/code \
+        -v ~/.ssh:/home/infratools/.ssh \
+        -v ~/.aws:/home/infratools/.aws \
+        -v ~/.kube:/home/infratools/.kube \
+        -w /code/ \
+        -e AWS_DEFAULT_REGION=eu-west-1 \
+        #--dns 1.1.1.1
+        docker.io/containerscrew/infratools:${CONTAINER_VERSION}
+fi
 ```
 
-![example](./example.png)
-
-### Git errors after unshare
-
-`fatal: detected dubious ownership in repository at '$HOME/mycode'
-To add an exception for this directory, call:`
-
-```git config --global --add safe.directory $HOME/mycode```
-
-## Docker
-
-> [!IMPORTANT]
-> I guess with Docker you don't need to do any of this. Honestly I don't use Docker. If there is a problem, open an issue.
-
-# TO DO
+# TODO
 
 * Add also tag `latest` in docker hub images.
 * Add other dynamic version switchers for other tools (tgswitch, kubectl...)
@@ -209,7 +214,7 @@ To add an exception for this directory, call:`
 
 # CHANGELOG
 
-Pending to add changelog to track every new git tag is created, which versions are included.
+[CHANGELOG.md](./CHANGELOG.md)
 
 # LICENSE
 
