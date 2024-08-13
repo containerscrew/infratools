@@ -2,6 +2,8 @@ name: Hadolint 👀
 
 on:
   push:
+    paths:
+      - Dockerfile
     branches:
       - '*'
     tags:
