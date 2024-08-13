@@ -4,19 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [unreleased]
 
-- Update changelog
-
-
-- Update hadolint pipeline
-
-
-- Change github action build
-
-
-- Wip: github build
-
-
-- Wip: pipelines
+- Update build pipeline
 
 
 ## [2.0.0] - 2024-08-13
@@ -34,6 +22,24 @@ All notable changes to this project will be documented in this file.
 
 
 - Fix buildah github action
+
+
+- Update changelog
+
+
+- Update hadolint pipeline
+
+
+- Change github action build
+
+
+- Wip: github build
+
+
+- Wip: pipelines
+
+
+- Stable version v2.0.0
 
 
 ## [1.12.0] - 2024-08-06

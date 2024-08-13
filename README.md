@@ -181,7 +181,7 @@ make local-run
 make local-build-run
 ```
 
-> Use the version([tag](https://github.com/containerscrew/infratools/tags)) you need.
+> Use other version([tag](https://github.com/containerscrew/infratools/tags)) if needed (edit the Makefile).
 
 ## Mapping volumes to the container
 
