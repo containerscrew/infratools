@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [2.0.0] - 2024-08-13
 
 - 📝 Update CHANGELOG
 
@@ -11,6 +11,12 @@ All notable changes to this project will be documented in this file.
 
 
 - ♻️ Changelog
+
+
+- Fix hadolint
+
+
+- Fix buildah github action
 
 
 ## [1.12.0] - 2024-08-06
