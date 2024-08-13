@@ -20,7 +20,7 @@ trivy-scan: ## Scan image using trivy
 	trivy image localhost/infratools:test
 
 hadolint: ## Run hadolint
-	hadolint
+	hadolint Dockerfile
 
 generate-changelog: ## Generate changelog using git cliff
 	git cliff --output CHANGELOG.md

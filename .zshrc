@@ -74,7 +74,7 @@ plugins=(git kube-ps1)
 
 source $ZSH/oh-my-zsh.sh
 
-PROMPT='$(kube_ps1)'$PROMPT 
+PROMPT='$(kube_ps1)'$PROMPT
 
 # User configuration
 

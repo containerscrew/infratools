@@ -2,12 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.0.0] - 2024-08-13
+## [unreleased]
 
 - 📝 Update CHANGELOG
 
 
 - ♻️ New version v2.0.0
+
+
+- ♻️ Changelog
 
 
 ## [1.12.0] - 2024-08-06

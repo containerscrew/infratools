@@ -18,6 +18,7 @@
     - [Use venv](#use-venv)
     - [Force installation](#force-installation)
 - [Architecture](#architecture)
+- [Lint](#lint)
 - [Image security scan with Trivy](#image-security-scan-with-trivy)
   - [Local trivy scan](#local-trivy-scan)
 - [Running locally](#running-locally)
@@ -149,6 +150,12 @@ pip3 install boto3 --break-system-packages
 |---------|----------|--------|
 | amd64   | ✅        | ✅        |
 | arm64   | ✅         | ✅         |
+
+# Lint
+
+```shell
+make hadolint
+```
 
 # Image security scan with Trivy
 
