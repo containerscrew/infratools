@@ -68,7 +68,7 @@ env:
   REPOSITORY: docker.io/containerscrew/infratools
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -80,7 +80,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{  secrets.DOCKERHUB_AUTH_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
           password: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
       
       # Step to set Docker tag based on the generated GitHub tag
@@ -96,7 +96,7 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: false
-          tags: $REPOSITORY:$IMAGE_TAG, $REPOSITORY:latest
+          tags: ${{ $REPOSITORY:$IMAGE_TAG }}, ${{ $REPOSITORY:latest }}
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
