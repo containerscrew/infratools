@@ -1,63 +1,9 @@
-# jobs:
-#   build:
-#     name: Build image
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Git checkout
-#         uses: actions/checkout@v4
-
-#       # For multiarch
-#       - name: Install qemu dependency
-#         run: |
-#           sudo apt-get update
-#           sudo apt-get install -y qemu-user-static buildkit
-
-#       # Step to set Docker tag based on the generated GitHub tag
-#       - name: Set container tag
-#         id: set_tag
-#         run: |
-#           # Extract the tag name from the full reference
-#           IMAGE_TAG=$(echo "${{ github.ref }}" | sed 's|.*/||')
-#           echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_ENV"
-
-#       - name: Buildah login docker.io
-#         run: |
-#           buildah login -u ${{ secrets.DOCKERHUB_AUTH_USERNAME }} -p ${{ secrets.DOCKERHUB_AUTH_TOKEN }} docker.io
-
-#       # You can also use official github action from redhat: redhat-actions/buildah-build@v2
-#       - name: Buildah multiarch
-#         run: |
-#           buildah manifest create multiarch
-#           # TO DO: speed up the build with jobs=2 --arch amd64,arm64
-#           buildah bud --jobs=0 --layers --arch amd64 --manifest multiarch --format=docker .
-#           buildah bud --jobs=0 --layers --arch arm64 --manifest multiarch --format=docker .
-#           buildah manifest push --all localhost/multiarch docker://$REPOSITORY:$IMAGE_TAG
-#           buildah manifest rm localhost/multiarch
-#           buildah logout $REGISTRY
-
-#       - name: Run Trivy vulnerability scanner
-#         uses: aquasecurity/trivy-action@master
-#         with:
-#           image-ref: '${{env.REPOSITORY}}:${{env.IMAGE_TAG}}'
-#           format: 'sarif'
-#           output: 'trivy-results.sarif'
-#           vuln-type: 'os,library'
-#           ignore-unfixed: false
-#         env:
-#           TRIVY_USERNAME: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
-#           TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
-
-#       - name: Upload Trivy scan results to GitHub Security tab
-#         uses: github/codeql-action/upload-sarif@v3
-#         with:
-#           sarif_file: 'trivy-results.sarif'
-
 name: Build and scan 🕷️📦
 
 on:
   push:
-    # tags:
-    #   - 'v*.*.*'
+    tags:
+      - 'v*.*.*'
 
 permissions:
   actions: read
