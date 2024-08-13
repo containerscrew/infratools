@@ -215,7 +215,6 @@ fi
 
 # TODO
 
-* Add also tag `latest` in docker hub images.
 * Add other dynamic version switchers for other tools (tgswitch, kubectl...)
 * Automatic pipeline cron with image scan & automatic build
 

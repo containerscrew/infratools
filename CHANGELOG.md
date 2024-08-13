@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+- Update changelog
+
+
+- Update hadolint pipeline
+
+
+- Change github action build
+
+
+- Wip: github build
+
+
+- Wip: pipelines
+
+
 ## [2.0.0] - 2024-08-13
 
 - 📝 Update CHANGELOG
