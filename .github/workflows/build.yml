@@ -96,7 +96,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64,linux/arm64
-          push: false
+          push: true
           tags: ${{ env.REPOSITORY }}:latest,${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
   sec:
       name: sec
