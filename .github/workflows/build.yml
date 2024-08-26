@@ -98,4 +98,4 @@ jobs:
             make generate-changelog
             git add CHANGELOG.md
             git commit -m "Update CHANGELOG.md for release ${{ env.TAG_NAME }}"
-            git push origin main 
+            git push origin main

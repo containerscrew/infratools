@@ -192,15 +192,13 @@ Example `run-local-container.sh`:
 ```shell
 #!/bin/bash
 
-CONTAINER_NAME="containertools"
-CONTAINER_VERSION="v2.0.0"
+CONTAINER_NAME="infratools"
+CONTAINER_VERSION="v2.1.0"
 
-echo "Check if there is a running tools container..."
 if [ $(docker ps | grep ${CONTAINER_NAME} | wc -l) -gt 0 ];then
-    docker exec -ti ${CONTAINER_NAME} bash
+    docker exec -ti ${CONTAINER_NAME} zsh
 else
-    echo "Running infratools..."
-    docker run -ti \
+    docker run -tid \
         --name ${CONTAINER_NAME} \
         --rm \
         -h ${CONTAINER_NAME} \
@@ -208,10 +206,12 @@ else
         -v ~/.ssh:/home/infratools/.ssh \
         -v ~/.aws:/home/infratools/.aws \
         -v ~/.kube:/home/infratools/.kube \
+        -v ~/.zsh_history/:/home/infratools/.zsh_history \
         -w /code/ \
         -e AWS_DEFAULT_REGION=eu-west-1 \
-        #--dns 1.1.1.1
+#        --dns 1.1.1.1 \
         docker.io/containerscrew/infratools:${CONTAINER_VERSION}
+    docker exec -it ${CONTAINER_NAME} zsh
 fi
 ```
 
