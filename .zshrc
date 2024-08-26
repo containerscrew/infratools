@@ -110,3 +110,6 @@ alias l='ls -CF'
 alias k='kubectl'
 alias ktx='kubectx'
 alias kns='kubens'
+
+# FZF
+source <(fzf --zsh)
