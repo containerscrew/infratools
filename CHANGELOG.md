@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+- Edit CHANGELOG.md
+
+
 ## [2.1.0] - 2024-08-26
 
 - Add CHANGELOG
