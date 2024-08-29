@@ -42,7 +42,7 @@
 
 How many times do you need a container image with tools like `terraform, helm, kubectl, aws cli, terragrunt`... among many others? Aren't you tired of having to maintain all of them in each repository, instead of having one **"general"** one that can be used in multiple repos?
 
-**Available tags:** https://hub.docker.com/repository/docker/containerscrew/infratools/general
+**Available tags:** https://hub.docker.com/r/containerscrew/infratools/tags
 
 # Available tools
 
@@ -65,7 +65,7 @@ Take a look to all the available installed tools inside the [Dockerfile](./Docke
 
 > AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
 
-> For every new version, a new git tag will be created. You can see versioning inside [Dockerfile](./Containerfile)
+> For every new version, a new git tag will be created. You can see versioning inside [Dockerfile](./Dockerfile)
 
 ## Dynamically change terraform version
 
