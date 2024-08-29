@@ -4,17 +4,15 @@
 <p align="center">Container image with infra tools (terraform, terragrunt, aws cli, helm, kubectl...). Useful for CI/CD.</p>
 </p>
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
+<!-- START OF TOC !DO NOT EDIT THIS CONTENT MANUALLY-->
+**Table of Contents**  *generated with [mtoc](https://github.com/containerscrew/mtoc)*
 - [Badges](#badges)
 - [About](#about)
 - [Available tools](#available-tools)
   - [Versioning](#versioning)
   - [Dynamically change terraform version](#dynamically-change-terraform-version)
   - [Installing python libraries](#installing-python-libraries)
-    - [Use pipx to install python packages/libraries](#use-pipx-to-install-python-packageslibraries)
+    - [Use pipx to install python packages/libraries](#use-pipx-to-install-python-packages/libraries)
     - [Use venv](#use-venv)
     - [Force installation](#force-installation)
 - [Architecture](#architecture)
@@ -26,8 +24,7 @@
 - [TODO](#todo)
 - [CHANGELOG](#changelog)
 - [LICENSE](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- END OF TOC -->
 
 ![example](./example.png)
 
