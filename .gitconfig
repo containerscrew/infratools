@@ -1,0 +1,8 @@
+[http "https://gitlab.server.internal"]
+  ##################################
+  # Self Signed Server Certificate #
+  ##################################
+
+  sslCAInfo = /path/to/your/certificate.crt
+  #sslCAPath = /path/to/selfCA/
+  sslVerify = true

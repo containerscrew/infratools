@@ -15,6 +15,7 @@
     - [Use pipx to install python packages/libraries](#use-pipx-to-install-python-packages/libraries)
     - [Use venv](#use-venv)
     - [Force installation](#force-installation)
+- [Global gitconfig for internal git servers with self signed certificate](#global-gitconfig-for-internal-git-servers-with-self-signed-certificate)
 - [Architecture](#architecture)
 - [Lint](#lint)
 - [Image security scan with Trivy](#image-security-scan-with-trivy)
@@ -141,6 +142,21 @@ pip3 install mypackage
 
 ```shell
 pip3 install boto3 --break-system-packages
+```
+
+# Global gitconfig for internal git servers with self signed certificate
+
+If using custom git repository with self signed certificate, just edit in your `~/.gitconfig`:
+
+```bash
+[http "https://gitlab.server.internal"]
+  ##################################
+  # Self Signed Server Certificate #
+  ##################################
+
+  sslCAInfo = /path/to/your/certificate.crt
+  #sslCAPath = /path/to/selfCA/
+  sslVerify = true # or set to false if you trust
 ```
 
 # Architecture
