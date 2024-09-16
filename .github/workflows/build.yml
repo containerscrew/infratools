@@ -6,8 +6,8 @@ on:
       - 'v*.*.*'
 
 permissions:
-  actions: read
-  contents: read
+  actions: write
+  contents: write
   security-events: write
 
 env:
