@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.0] - 2024-09-17
+
+- Update CHANGELOG.md for release v2.3.0
+
+
+- Update README doc and add .gitconfig
+
+
+- Change badge
+
+
+- Add run.sh script
+
+
+- Upgrade terraform to 1.9.5 and terragrunt to 0.67.6
+
+
 ## [2.3.0] - 2024-09-16
 
 - Add aws-profile zsh function
