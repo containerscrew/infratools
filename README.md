@@ -231,7 +231,7 @@ fi
 # TODO
 
 * Add other dynamic version switchers for other tools (tgswitch, kubectl...)
-* Automatic pipeline cron with image scan & automatic build
+* Seperate pipeline for build release + build in other branch
 
 # CHANGELOG
 
