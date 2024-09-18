@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.1] - 2024-09-18
+
+- Update CHANGELOG.md for release v2.5.0
+
+
+- Fix kube-ps1 prompt
+
+
 ## [2.5.0] - 2024-09-18
 
 - Update CHANGELOG.md for release v2.4.0
