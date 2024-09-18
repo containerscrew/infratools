@@ -74,10 +74,7 @@ plugins=(git kube-ps1 kubectl terraform)
 
 source $ZSH/oh-my-zsh.sh
 
-PROMPT='$(kube_ps1)'$PROMPT
-
 # User configuration
-
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
