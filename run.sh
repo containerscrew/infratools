@@ -14,7 +14,6 @@ else
         -v ~/.ssh:/home/infratools/.ssh \
         -v ~/.aws:/home/infratools/.aws \
         -v ~/.kube:/home/infratools/.kube \
-        -v ~/.zsh_history/:/home/infratools/.zsh_history \
         -w /code/ \
         -e AWS_DEFAULT_REGION=eu-west-1 \
         --dns 1.1.1.1 \
