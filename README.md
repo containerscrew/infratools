@@ -206,7 +206,7 @@ Example [`run.sh`](./run.sh):
 #!/bin/bash
 
 CONTAINER_NAME="infratools"
-CONTAINER_VERSION="v2.5.1"
+CONTAINER_VERSION="v2.5.2"
 
 if [ "$(docker ps | grep -c "${CONTAINER_NAME}")" -gt 0 ];then
     docker exec -ti ${CONTAINER_NAME} zsh
@@ -219,7 +219,6 @@ else
         -v ~/.ssh:/home/infratools/.ssh \
         -v ~/.aws:/home/infratools/.aws \
         -v ~/.kube:/home/infratools/.kube \
-        -v ~/.zsh_history/:/home/infratools/.zsh_history \
         -w /code/ \
         -e AWS_DEFAULT_REGION=eu-west-1 \
         --dns 1.1.1.1 \

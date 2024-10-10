@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CONTAINER_NAME="infratools"
-CONTAINER_VERSION="v2.5.1"
+CONTAINER_VERSION="v2.5.2"
 
 if [ "$(docker ps | grep -c "${CONTAINER_NAME}")" -gt 0 ];then
     docker exec -ti ${CONTAINER_NAME} zsh
