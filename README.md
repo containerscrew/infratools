@@ -228,6 +228,11 @@ fi
 docker exec -ti "${CONTAINER_NAME}" zsh
 ```
 
+> [!IMPORTANT]  
+> ZSH history will be saved in /code repository to allow persistent command history.
+> So, If you don't want to push the .zsh_history to git, add the file to `.gitignore`.
+
+
 # TODO
 
 * Add other dynamic version switchers for other tools (tgswitch, kubectl...)
