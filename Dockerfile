@@ -36,7 +36,8 @@ RUN case $(uname -m) in \
 # Core packages
 RUN apk add --update --no-cache \
     make ca-certificates zsh zsh-vcs jq zip shadow curl git vim bind-tools python3 py3-pip pipx kubectx \
-    openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client tflint=${TFLINT_VERSION}
+    openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client tflint=${TFLINT_VERSION} \
+    pre-commit
 
 # Rootless user
 RUN groupadd --gid $USER_GID $USERNAME ;\
