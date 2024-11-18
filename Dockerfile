@@ -7,6 +7,7 @@ ARG TERRAFORM_VERSION=1.9.5
 ARG TERRAGRUNT_VERSION=0.67.6
 ARG AWSCLI_VERSION="2.15.57-r0"
 ARG TFTOOLS_VERSION="v0.9.0"
+ARG TFLINT_VERSION="0.51.1-r3"
 ENV USERNAME="infratools"
 ENV USER_UID=1000
 ENV USER_GID=$USER_UID
@@ -35,7 +36,7 @@ RUN case $(uname -m) in \
 # Core packages
 RUN apk add --update --no-cache \
     make ca-certificates zsh zsh-vcs jq zip shadow curl git vim bind-tools python3 py3-pip pipx kubectx \
-    openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client
+    openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client tflint=${TFLINT_VERSION}
 
 # Rootless user
 RUN groupadd --gid $USER_GID $USERNAME ;\
