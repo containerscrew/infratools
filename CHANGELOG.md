@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.6.0] - 2024-11-18
+
+- Update CHANGELOG.md for release v2.5.3
+
+- Install tflint 0.51.1-r3
+
 ## [2.5.3] - 2024-10-16
 
 - Update CHANGELOG.md for release v2.5.2
