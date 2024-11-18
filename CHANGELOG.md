@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.7.0] - 2024-11-18
+
+- Update CHANGELOG.md for release v2.6.0
+
+- Install pre-commit
+
 ## [2.6.0] - 2024-11-18
 
 - Update CHANGELOG.md for release v2.5.3
