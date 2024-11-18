@@ -1,6 +1,7 @@
 <!-- START OF TOC !DO NOT EDIT THIS CONTENT MANUALLY-->
 **Table of Contents**  *generated with [mtoc](https://github.com/containerscrew/mtoc)*
 - [Changelog](#changelog)
+  - [[2.7.0] - 2024-11-18](#[2.7.0]---2024-11-18)
   - [[2.6.0] - 2024-11-18](#[2.6.0]---2024-11-18)
   - [[2.5.3] - 2024-10-16](#[2.5.3]---2024-10-16)
   - [[2.5.2] - 2024-10-10](#[2.5.2]---2024-10-10)
