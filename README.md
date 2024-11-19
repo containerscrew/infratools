@@ -8,20 +8,19 @@
 **Table of Contents**  *generated with [mtoc](https://github.com/containerscrew/mtoc)*
 - [Badges](#badges)
 - [About](#about)
-- [Available tools](#available-tools)
-  - [Versioning](#versioning)
-  - [Dynamically change terraform version](#dynamically-change-terraform-version)
-  - [Installing python libraries](#installing-python-libraries)
-    - [Use pipx to install python packages/libraries](#use-pipx-to-install-python-packages/libraries)
-    - [Use venv](#use-venv)
-    - [Force installation](#force-installation)
-- [Global gitconfig for internal git servers with self signed certificate](#global-gitconfig-for-internal-git-servers-with-self-signed-certificate)
 - [Architecture](#architecture)
+- [Main tools](#main-tools)
+- [Versioning](#versioning)
+- [Installing python libraries](#installing-python-libraries)
+  - [Use pipx to install python packages/libraries](#use-pipx-to-install-python-packages/libraries)
+  - [Use venv](#use-venv)
+  - [Force installation with pip3](#force-installation-with-pip3)
+- [Global gitconfig for internal git servers with self signed certificate](#global-gitconfig-for-internal-git-servers-with-self-signed-certificate)
 - [Lint](#lint)
 - [Image security scan with Trivy](#image-security-scan-with-trivy)
   - [Local trivy scan](#local-trivy-scan)
-- [Running locally](#running-locally)
-  - [Mapping volumes to the container](#mapping-volumes-to-the-container)
+- [Local dev](#local-dev)
+- [Using `run.sh` script (Recommended)](#using-`run.sh`-script-(recommended))
 - [TODO](#todo)
 - [CHANGELOG](#changelog)
 - [LICENSE](#license)
@@ -45,7 +44,14 @@ How many times do you need a container image with tools like `terraform, helm, k
 
 **Available tags:** https://hub.docker.com/r/containerscrew/infratools/tags
 
-# Available tools
+# Architecture
+
+| Arch    | Supported | Tested |
+|---------|----------|--------|
+| amd64   | ✅        | ✅        |
+| arm64   | ✅         | ✅         |
+
+# Main tools
 
 | Tool                                                 | Available |
 |------------------------------------------------------|----------|
@@ -60,30 +66,21 @@ How many times do you need a container image with tools like `terraform, helm, k
 
 Take a look to all the available installed tools inside the [Dockerfile](./Dockerfile)
 
-## Versioning
-
-> Alpine core packages: https://pkgs.alpinelinux.org/packages
-
-> AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
-
-> For every new version, a new git tag will be created. You can see versioning inside [Dockerfile](./Dockerfile)
-
-## Dynamically change terraform version
-
 > [!TIP]
-> By default, a version of terraform is installed using `tfenv`. If you have the `.terraform-version` file in your `terraform/terragrunt` repository, `tfenv` should detect the version and install it automatically.
+> You can change `terraform` version dynamically using `tfenv` or setting `.terraform-version` file in your repository.
 
 
-Or change it yourself, for example, within a pipeline:
+# Versioning
 
-```shell
-tfenv use 1.5.5
-```
+* Alpine core packages: https://pkgs.alpinelinux.org/packages
+* AWS cli v2 is installed directly from official alpine repository. If you need to look for other version, [visit this page](https://pkgs.alpinelinux.org/packages?name=aws-cli&branch=edge&repo=&arch=&maintainer=)
+* For every new version, a new git tag will be created. You can see versioning inside [Dockerfile](./Dockerfile)
 
-## Installing python libraries
+
+# Installing python libraries
 
 <details>
-<summary>You can install python libraries using `pip3`. BTW, you will see the following error:</summary>
+<summary>If you try to install python libraries using `pip3`, you will see the following error:</summary>
 <br>
 Error:
 <br><br>
@@ -116,7 +113,7 @@ hint: See PEP 668 for the detailed specification.
 </pre>
 </details>
 
-### Use pipx to install python packages/libraries
+## Use pipx to install python packages/libraries
 
 Install library + deps:
 
@@ -130,7 +127,7 @@ Install a package:
 pipx install your-package-name # visit pypip
 ```
 
-### Use venv
+## Use venv
 
 ```shell
 python3 -m venv /path/to/venv
@@ -138,7 +135,7 @@ python3 -m venv /path/to/venv
 pip3 install mypackage
 ```
 
-### Force installation
+## Force installation with pip3
 
 ```shell
 pip3 install boto3 --break-system-packages
@@ -158,13 +155,6 @@ If using custom git repository with self signed certificate, just edit in your `
   #sslCAPath = /path/to/selfCA/
   sslVerify = true # or set to false if you trust
 ```
-
-# Architecture
-
-| Arch    | Supported | Tested |
-|---------|----------|--------|
-| amd64   | ✅        | ✅        |
-| arm64   | ✅         | ✅         |
 
 # Lint
 
@@ -187,7 +177,7 @@ make build-image
 make trivy-scan # trivy image docker.io/containerscrew/infratools:test
 ```
 
-# Running locally
+# Local dev
 
 ```shell
 make local-build
@@ -198,55 +188,20 @@ make local-build-run
 
 > Use other version([tag](https://github.com/containerscrew/infratools/tags)) if needed (edit the Makefile).
 
-## Mapping volumes to the container
+# Using `run.sh` script (Recommended)
 
-Example [`run.sh`](./run.sh):
+Create a copy of the script [`run.sh`](./run.sh) in your repository and run it.
 
 ```shell
-#!/bin/bash
-
-CONTAINER_NAME="infratools"
-CONTAINER_VERSION="v2.6.0"
-
-# Fetch latest image version (tag)
-LATEST_VERSION=$(curl -s "https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=1" | jq -r '.results[0].name')
-
-if [[ $? -ne 0 || -z "$LATEST_VERSION" ]]; then
-    echo -e "\e[31mError fetching the latest container version. Please ensure you have Internet access and that 'jq' is installed.\e[0m"
-fi
-
-if [[ "$CONTAINER_VERSION" != "$LATEST_VERSION" ]]; then
-    echo -e "\e[33m"
-    echo "###########################################################"
-    echo "---> Warning: The configured version (${CONTAINER_VERSION}) does not match the latest available version (${LATEST_VERSION})"
-    echo "---> Warning: Delete the current container and run again the script to pull the latest version"
-    echo "###########################################################"
-    echo -e "\e[0m"
-fi
-
-if [ $(docker ps --filter "name=^/${CONTAINER_NAME}$" --format '{{.Names}}' | wc -l) -gt 0 ]; then
-    docker exec -ti ${CONTAINER_NAME} zsh
-else
-    docker run -tid \
-        --name ${CONTAINER_NAME} \
-        --rm \
-        -h ${CONTAINER_NAME} \
-        -v "$(pwd)"/:/code \
-        -v ~/.ssh:/home/infratools/.ssh \
-        -v ~/.aws:/home/infratools/.aws \
-        -v ~/.kube:/home/infratools/.kube \
-        -w /code/ \
-        -e AWS_DEFAULT_REGION=eu-west-1 \
-        --dns 1.1.1.1 \
-        docker.io/containerscrew/infratools:${CONTAINER_VERSION}
-fi
-
-docker exec -ti "${CONTAINER_NAME}" zsh
+./run.sh
+Usage: ./run.sh [-i (info)] [-u (update)] [-a (attach)]
 ```
 
+With this script, you can run the container or attach to an existing, update the container to the latest tag version, or get the current version of the container.
+
 > [!IMPORTANT]
-> ZSH history will be saved in /code repository to allow persistent command history.
-> So, If you don't want to push the .zsh_history to git, add the file to `.gitignore`.
+> Running this script, ZSH history will be saved in /code repository to allow persistent command history.
+> So, If you don't want to push the .zsh_history to git, add the file to `.gitignore` in the repo you are using.
 
 
 # TODO
@@ -256,8 +211,8 @@ docker exec -ti "${CONTAINER_NAME}" zsh
 
 # CHANGELOG
 
-[CHANGELOG.md](./CHANGELOG.md)
+[`CHANGELOG.md`](./CHANGELOG.md)
 
 # LICENSE
 
-[LICENSE](./LICENSE)
+[`LICENSE`](./LICENSE)
