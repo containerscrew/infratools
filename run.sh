@@ -1,39 +1,115 @@
 #!/bin/bash
 
+# Configuration
 CONTAINER_NAME="infratools"
-CONTAINER_VERSION="v2.6.0"
+CONTAINER_VERSION="v2.7.1"
+IMAGE_NAME="docker.io/containerscrew/infratools"
+REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=1"
 
-# Fetch latest image version (tag)
-LATEST_VERSION=$(curl -s "https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=1" | jq -r '.results[0].name')
+# Function to check prerequisites
+check_prerequisites() {
+    for cmd in curl jq docker; do
+        if ! command -v "$cmd" &>/dev/null; then
+            echo -e "\e[31m[ERROR] Required command '$cmd' is not installed.\e[0m"
+            exit 1
+        fi
+    done
+}
 
-if [[ $? -ne 0 || -z "$LATEST_VERSION" ]]; then
-    echo -e "\e[31mError fetching the latest container version. Please ensure you have Internet access and that 'jq' is installed.\e[0m"
-fi
+# Function to fetch the latest version
+fetch_latest_version() {
+    local latest_version
+    latest_version=$(curl -s "$REGISTRY_URL" | jq -r '.results[0].name')
+    if [[ $? -ne 0 || -z "$latest_version" ]]; then
+        echo -e "\e[31m[ERROR] Failed to fetch the latest version. Check your internet connection or 'jq' installation.\e[0m"
+        echo "Unknown"
+    else
+        echo "$latest_version"
+    fi
+}
 
-if [[ "$CONTAINER_VERSION" != "$LATEST_VERSION" ]]; then
-    echo -e "\e[33m"
-    echo "###########################################################"
-    echo "---> Warning: The configured version (${CONTAINER_VERSION}) does not match the latest available version (${LATEST_VERSION})"
-    echo "---> Warning: Delete the current container and run again the script to pull the latest version"
-    echo "###########################################################"
-    echo -e "\e[0m"
-fi
+# Function to print container info
+print_info() {
+    echo -e "\e[32m[INFO] Current Configuration and Container Status:\e[0m"
+    echo "-----------------------------------------------------------"
+    echo "Configured version: ${CONTAINER_VERSION}"
+    echo "Running version: ${CURRENT_RUNNING_VERSION}"
+    echo "Latest version: ${LATEST_VERSION}"
+    echo "-----------------------------------------------------------"
+}
 
-if [ $(docker ps --filter "name=^/${CONTAINER_NAME}$" --format '{{.Names}}' | wc -l) -gt 0 ]; then
-    docker exec -ti ${CONTAINER_NAME} zsh
-else
+# Function to start the container
+start_container() {
+    echo -e "\e[32m[INFO] Starting a new container '${CONTAINER_NAME}'...\e[0m"
     docker run -tid \
-        --name ${CONTAINER_NAME} \
+        --name "${CONTAINER_NAME}" \
         --rm \
-        -h ${CONTAINER_NAME} \
-        -v "$(pwd)"/:/code \
+        -h "${CONTAINER_NAME}" \
+        -v "$(pwd):/code" \
         -v ~/.ssh:/home/infratools/.ssh \
         -v ~/.aws:/home/infratools/.aws \
         -v ~/.kube:/home/infratools/.kube \
         -w /code/ \
         -e AWS_DEFAULT_REGION=eu-west-1 \
         --dns 1.1.1.1 \
-        docker.io/containerscrew/infratools:${CONTAINER_VERSION}
+        "${IMAGE_NAME}:${CONTAINER_VERSION}"
+}
+
+# Function to attach to the running container
+attach_container() {
+    echo -e "\e[32m[INFO] Attaching to the running container '${CONTAINER_NAME}'...\e[0m"
+    docker exec -ti "${CONTAINER_NAME}" zsh
+}
+
+# Function to handle updates
+update_container() {
+    echo -e "\e[32m[INFO] Updating container '${CONTAINER_NAME}' to the latest version (${LATEST_VERSION})...\e[0m"
+    docker stop "${CONTAINER_NAME}" &>/dev/null || true
+    start_container
+}
+
+# Fetch the current running version
+CURRENT_RUNNING_VERSION=$(docker ps --filter "name=^/${CONTAINER_NAME}$" --format '{{.Image}}' | awk -F':' '{print $2}')
+if [[ -z "$CURRENT_RUNNING_VERSION" ]]; then
+    CURRENT_RUNNING_VERSION="Not running (first time)"
 fi
 
-docker exec -ti "${CONTAINER_NAME}" zsh
+# Fetch the latest version
+LATEST_VERSION=$(fetch_latest_version)
+
+# Check prerequisites
+check_prerequisites
+
+# Parse options with getopts
+while getopts "iua" opt; do
+    case "$opt" in
+        i)  # Print info
+            print_info
+            ;;
+        u)  # Update the container if necessary
+            if [[ "$LATEST_VERSION" != "$CURRENT_RUNNING_VERSION" ]]; then
+                update_container
+            else
+                echo -e "\e[32m[INFO] The container is already up-to-date.\e[0m"
+            fi
+            ;;
+        a)  # Attach to the container
+            if docker ps --filter "name=^/${CONTAINER_NAME}$" --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+                attach_container
+            else
+                echo -e "\e[33m[WARNING] No running container found. Starting a new one...\e[0m"
+                start_container
+                attach_container
+            fi
+            ;;
+        *)  # Invalid option
+            echo -e "\e[31m[ERROR] Invalid option. Use -i (info), -u (update), or -a (attach).\e[0m"
+            exit 1
+            ;;
+    esac
+done
+
+# If no options are provided, show usage
+if [[ $OPTIND -eq 1 ]]; then
+    echo -e "\e[32mUsage: $0 [-i (info)] [-u (update)] [-a (attach)]\e[0m"
+fi
