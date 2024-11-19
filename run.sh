@@ -103,7 +103,7 @@ while getopts "iua" opt; do
             fi
             ;;
         *)  # Invalid option
-            echo -e "\e[31m[ERROR] Invalid option. Use -i (info), -u (update), or -a (attach).\e[0m"
+            echo -e "\e[31m[ERROR] Invalid option. Use -i (info), -u (update), or -a (attach or create).\e[0m"
             exit 1
             ;;
     esac
@@ -111,5 +111,5 @@ done
 
 # If no options are provided, show usage
 if [[ $OPTIND -eq 1 ]]; then
-    echo -e "\e[32mUsage: $0 [-i (info)] [-u (update)] [-a (attach)]\e[0m"
+    echo -e "\e[32mUsage: $0 [-i (info)] [-u (update)] [-a (attach or create)]\e[0m"
 fi
