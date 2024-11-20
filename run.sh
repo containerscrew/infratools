@@ -2,7 +2,7 @@
 
 # Configuration
 CONTAINER_NAME="infratools"
-CONTAINER_VERSION="v2.7.1"
+CONTAINER_VERSION="v2.6.0"
 IMAGE_NAME="docker.io/containerscrew/infratools"
 REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=1"
 
@@ -40,6 +40,7 @@ print_info() {
 
 # Function to start the container
 start_container() {
+    local CONTAINER_VERSION=${1:-$CONTAINER_LATEST_VERSION}
     echo -e "\e[32m[INFO] Starting a new container '${CONTAINER_NAME}'...\e[0m"
     docker run -tid \
         --name "${CONTAINER_NAME}" \
@@ -65,7 +66,8 @@ attach_container() {
 update_container() {
     echo -e "\e[32m[INFO] Updating container '${CONTAINER_NAME}' to the latest version (${LATEST_VERSION})...\e[0m"
     docker stop "${CONTAINER_NAME}" &>/dev/null || true
-    start_container
+    start_container "${LATEST_VERSION}"
+    docker exec -ti "${CONTAINER_NAME}" zsh
 }
 
 # Fetch the current running version
@@ -98,7 +100,7 @@ while getopts "iua" opt; do
                 attach_container
             else
                 echo -e "\e[33m[WARNING] No running container found. Starting a new one...\e[0m"
-                start_container
+                start_container "${CONTAINER_VERSION}"
                 attach_container
             fi
             ;;
