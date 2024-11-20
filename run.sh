@@ -71,7 +71,7 @@ update_container() {
 # Fetch the current running version
 CURRENT_RUNNING_VERSION=$(docker ps --filter "name=^/${CONTAINER_NAME}$" --format '{{.Image}}' | awk -F':' '{print $2}')
 if [[ -z "$CURRENT_RUNNING_VERSION" ]]; then
-    CURRENT_RUNNING_VERSION="Not running (first time)"
+    CURRENT_RUNNING_VERSION="Not running"
 fi
 
 # Fetch the latest version
