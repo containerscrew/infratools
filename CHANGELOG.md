@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.7.3] - 2024-11-25
+
+- Update CHANGELOG.md for release v2.7.2
+
+- Remove entrypoint in Dockerfile
+
 ## [2.7.2] - 2024-11-22
 
 - Update CHANGELOG.md for release v2.7.1
