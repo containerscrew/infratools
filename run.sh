@@ -53,7 +53,7 @@ start_container() {
         -w /code/ \
         -e AWS_DEFAULT_REGION=eu-west-1 \
         --dns 1.1.1.1 \
-        "${IMAGE_NAME}:${CONTAINER_VERSION}" /bin/zsh
+        "${IMAGE_NAME}:${CONTAINER_VERSION}"
 }
 
 # Function to attach to the running container
@@ -67,7 +67,7 @@ update_container() {
     echo -e "\e[32m[INFO] Updating container '${CONTAINER_NAME}' to the latest version (${LATEST_VERSION})...\e[0m"
     docker stop "${CONTAINER_NAME}" &>/dev/null || true
     start_container "${LATEST_VERSION}"
-    docker exec -ti "${CONTAINER_NAME}" /bin/zsh
+    docker exec -ti "${CONTAINER_NAME}" zsh
 }
 
 # Fetch the current running version
