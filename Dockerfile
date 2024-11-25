@@ -24,14 +24,14 @@ RUN set -eux
 
 # Set architecture
 RUN case $(uname -m) in \
-    x86_64) ARCH=amd64; ALT_ARCH=x86_64; ;; \
+    x86_64) ARCH=amd64; ;; \
     armv7l) ARCH=arm; ;; \
     aarch64) ARCH=arm64; ;; \
     ppc64le) ARCH=ppc64le; ;; \
     s390x) ARCH=s390x; ;; \
     *) echo "un-supported arch, exit ..."; exit 1; ;; \
     esac && \
-    echo "export ARCH=$ARCH\n export ALT_ARCH=$ALT_ARCH" > /envfile && \
+    echo "export ARCH=$ARCH" > /envfile && \
     cat /envfile
 
 # Core packages
@@ -68,10 +68,10 @@ RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/relea
 RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | sh -s -- -v "$TFTOOLS_VERSION"
 
 # Install helm-docs plugin
-RUN source /envfile && curl -sL https://github.com/norwoodj/helm-docs/releases/download/v${HELM_DOCS_VERSION}/helm-docs_${HELM_DOCS_VERSION}_Linux_${ALT_ARCH}.tar.gz -o /tmp/helm-docs.tar.gz && \
-    tar -xz -C /usr/bin/ -f /tmp/helm-docs.tar.gz helm-docs && \
-    chmod +x /usr/bin/helm-docs && \
-    rm /tmp/helm-docs.tar.gz
+# RUN source /envfile && curl -sL https://github.com/norwoodj/helm-docs/releases/download/v${HELM_DOCS_VERSION}/helm-docs_${HELM_DOCS_VERSION}_Linux_${ALT_ARCH}.tar.gz -o /tmp/helm-docs.tar.gz && \
+#     tar -xz -C /usr/bin/ -f /tmp/helm-docs.tar.gz helm-docs && \
+#     chmod +x /usr/bin/helm-docs && \
+#     rm /tmp/helm-docs.tar.gz
 
 # User actions
 USER $USERNAME
