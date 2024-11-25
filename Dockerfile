@@ -75,5 +75,3 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 WORKDIR $USER_HOME
 
 COPY .zshrc .zshrc
-
-ENTRYPOINT ["/bin/zsh"]
