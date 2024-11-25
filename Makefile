@@ -11,7 +11,7 @@ local-build: ## Build the image using podman
 	docker build -t localhost/infratools:test .
 
 local-run: ## Run the image locally
-	docker run --rm -it -h containertools --name infratools localhost/infratools:test
+	docker run --rm -it -h containertools --name infratools localhost/infratools:test /bin/zsh
 
 local-build-run: local-build local-run ## Build and run the image locally
 

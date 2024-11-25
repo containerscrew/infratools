@@ -8,6 +8,7 @@ ARG TERRAGRUNT_VERSION=0.67.6
 ARG AWSCLI_VERSION="2.15.57-r0"
 ARG TFTOOLS_VERSION="v0.9.0"
 ARG TFLINT_VERSION="0.51.1-r3"
+ARG HELM_DOCS_VERSION="1.14.2"
 ENV USERNAME="infratools"
 ENV USER_UID=1000
 ENV USER_GID=$USER_UID
@@ -23,14 +24,14 @@ RUN set -eux
 
 # Set architecture
 RUN case $(uname -m) in \
-    x86_64) ARCH=amd64; ;; \
+    x86_64) ARCH=amd64; ALT_ARCH=x86_64; ;; \
     armv7l) ARCH=arm; ;; \
     aarch64) ARCH=arm64; ;; \
     ppc64le) ARCH=ppc64le; ;; \
     s390x) ARCH=s390x; ;; \
     *) echo "un-supported arch, exit ..."; exit 1; ;; \
     esac && \
-    echo "export ARCH=$ARCH" > /envfile && \
+    echo "export ARCH=$ARCH\n export ALT_ARCH=$ALT_ARCH" > /envfile && \
     cat /envfile
 
 # Core packages
@@ -65,6 +66,12 @@ RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/relea
 
 # Install tftools
 RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | sh -s -- -v "$TFTOOLS_VERSION"
+
+# Install helm-docs plugin
+RUN source /envfile && curl -sL https://github.com/norwoodj/helm-docs/releases/download/v${HELM_DOCS_VERSION}/helm-docs_${HELM_DOCS_VERSION}_Linux_${ALT_ARCH}.tar.gz -o /tmp/helm-docs.tar.gz && \
+    tar -xz -C /usr/bin/ -f /tmp/helm-docs.tar.gz helm-docs && \
+    chmod +x /usr/bin/helm-docs && \
+    rm /tmp/helm-docs.tar.gz
 
 # User actions
 USER $USERNAME
