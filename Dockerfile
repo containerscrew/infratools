@@ -57,7 +57,7 @@ RUN source /envfile && curl -sL https://storage.googleapis.com/kubernetes-releas
 # Terraform using tfenv
 RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;\
     ln -s $USER_HOME/.tfenv/bin/* /usr/local/bin ;\
-    tfenv use ${TERRAFORM_VERSION} ;\
+    TFENV_ARCH="amd64" tfenv use ${TERRAFORM_VERSION} ;\
     chown -R $USERNAME:$USERNAME $USER_HOME/.tfenv/
 
 # Terragrunt
