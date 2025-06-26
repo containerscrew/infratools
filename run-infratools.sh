@@ -1,8 +1,8 @@
-#!/bin/bash
+#! /usr/bin/env bash
 
 # Configuration
 CONTAINER_NAME="infratools"
-CONTAINER_VERSION="v2.6.0"
+CONTAINER_VERSION="v2.8.0"
 IMAGE_NAME="docker.io/containerscrew/infratools"
 REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=1"
 
@@ -40,6 +40,13 @@ print_info() {
 
 # Function to start the container
 start_container() {
+      ENV_FILE=".user/env"
+      ENV_FILE_OPTION=()
+
+      if [ -f "$ENV_FILE" ]; then
+          ENV_FILE_OPTION=(--env-file "$ENV_FILE")
+      fi
+
     local CONTAINER_VERSION=${1:-$CONTAINER_LATEST_VERSION}
     echo -e "\e[32m[INFO] Starting a new container '${CONTAINER_NAME}'...\e[0m"
     docker run -tid \
@@ -53,18 +60,19 @@ start_container() {
         -w /code/ \
         -e AWS_DEFAULT_REGION=eu-west-1 \
         --dns 1.1.1.1 \
+        "${ENV_FILE_OPTION[@]}" \
         "${IMAGE_NAME}:${CONTAINER_VERSION}"
 }
 
 # Function to attach to the running container
 attach_container() {
-    echo -e "\e[32m[INFO] Attaching to the running container '${CONTAINER_NAME}'...\e[0m"
+    printf "\e[32m[INFO] Attaching to the running container '${CONTAINER_NAME}'...\e[0m"
     docker exec -ti "${CONTAINER_NAME}" zsh
 }
 
 # Function to handle updates
 update_container() {
-    echo -e "\e[32m[INFO] Updating container '${CONTAINER_NAME}' to the latest version (${LATEST_VERSION})...\e[0m"
+    printf "\e[32m[INFO] Updating container '${CONTAINER_NAME}' to the latest version (${LATEST_VERSION})...\e[0m"
     docker stop "${CONTAINER_NAME}" &>/dev/null || true
     start_container "${LATEST_VERSION}"
     docker exec -ti "${CONTAINER_NAME}" zsh
@@ -92,20 +100,20 @@ while getopts "iua" opt; do
             if [[ "$LATEST_VERSION" != "$CURRENT_RUNNING_VERSION" ]]; then
                 update_container
             else
-                echo -e "\e[32m[INFO] The container is already up-to-date.\e[0m"
+                printf "\e[32m[INFO] The container is already up-to-date.\e[0m"
             fi
             ;;
         a)  # Attach to the container
             if docker ps --filter "name=^/${CONTAINER_NAME}$" --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
                 attach_container
             else
-                echo -e "\e[33m[WARNING] No running container found. Starting a new one...\e[0m"
+                printf "\e[33m[WARNING] No running container found. Starting a new one...\e[0m"
                 start_container "${CONTAINER_VERSION}"
                 attach_container
             fi
             ;;
         *)  # Invalid option
-            echo -e "\e[31m[ERROR] Invalid option. Use -i (info), -u (update), or -a (attach or create).\e[0m"
+            printf "\e[31m[ERROR] Invalid option. Use -i (info), -u (update), or -a (attach or create).\e[0m"
             exit 1
             ;;
     esac
@@ -113,5 +121,5 @@ done
 
 # If no options are provided, show usage
 if [[ $OPTIND -eq 1 ]]; then
-    echo -e "\e[32mUsage: $0 [-i (info)] [-u (update)] [-a (attach or create)]\e[0m"
+    printf "\e[32mUsage: $0 [-i (info)] [-u (update)] [-a (attach or create)]\e[0m"
 fi

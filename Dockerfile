@@ -1,14 +1,12 @@
-ARG ALPINE_VERSION="3.20.2"
+ARG ALPINE_VERSION="3.22.0"
 FROM docker.io/alpine:${ALPINE_VERSION}
 
-ARG HELM_VERSION=3.13.2
-ARG KUBECTL_VERSION=1.26.0
-ARG TERRAFORM_VERSION=1.9.5
-ARG TERRAGRUNT_VERSION=0.67.6
-ARG AWSCLI_VERSION="2.15.57-r0"
+ARG HELM_VERSION="3.18.3"
+ARG KUBECTL_VERSION="1.32.0"
+ARG TERRAFORM_VERSION="1.9.5"
+ARG TERRAGRUNT_VERSION="0.82.0"
+ARG AWSCLI_VERSION="2.27.25-r0"
 ARG TFTOOLS_VERSION="v0.9.0"
-ARG TFLINT_VERSION="0.51.1-r3"
-ARG HELM_DOCS_VERSION="1.14.2"
 ENV USERNAME="infratools"
 ENV USER_UID=1000
 ENV USER_GID=$USER_UID
@@ -34,11 +32,14 @@ RUN case $(uname -m) in \
     echo "export ARCH=$ARCH" > /envfile && \
     cat /envfile
 
+# Add testing repository
+RUN echo '@community https://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
+
 # Core packages
 RUN apk add --update --no-cache \
     make ca-certificates zsh zsh-vcs jq zip shadow curl git vim bind-tools python3 py3-pip pipx kubectx \
-    openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client-krb5 tflint=${TFLINT_VERSION} \
-    pre-commit
+    openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client-krb5 \
+    pre-commit opentofu@community
 
 # Rootless user
 RUN groupadd --gid $USER_GID $USERNAME ;\
@@ -54,11 +55,9 @@ RUN source /envfile && curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-
 RUN source /envfile && curl -sL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
-# Terraform using tfenv
+# Install tfenv for terraform compatibility
 RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;\
-    ln -s $USER_HOME/.tfenv/bin/* /usr/local/bin ;\
-    TFENV_ARCH="amd64" tfenv use ${TERRAFORM_VERSION} ;\
-    chown -R $USERNAME:$USERNAME $USER_HOME/.tfenv/
+    ln -s $USER_HOME/.tfenv/bin/* /usr/local/bin
 
 # Terragrunt
 RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH} -o /usr/bin/terragrunt ;\
@@ -66,12 +65,6 @@ RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/relea
 
 # Install tftools
 RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | sh -s -- -v "$TFTOOLS_VERSION"
-
-# Install helm-docs plugin
-# RUN source /envfile && curl -sL https://github.com/norwoodj/helm-docs/releases/download/v${HELM_DOCS_VERSION}/helm-docs_${HELM_DOCS_VERSION}_Linux_${ALT_ARCH}.tar.gz -o /tmp/helm-docs.tar.gz && \
-#     tar -xz -C /usr/bin/ -f /tmp/helm-docs.tar.gz helm-docs && \
-#     chmod +x /usr/bin/helm-docs && \
-#     rm /tmp/helm-docs.tar.gz
 
 # User actions
 USER $USERNAME
