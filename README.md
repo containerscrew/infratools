@@ -6,12 +6,13 @@
 
 ---
 
-[![DockerHub Badge](http://dockeri.co/image/containerscrew/infratools)](https://hub.docker.com/r/containerscrew/infratools/)
-
 <p align="right">
   <strong>&gt; <a href="https://hub.docker.com/r/containerscrew/infratools/tags">Available tags</a></strong><br>
   <strong>&gt; Latest tag:</strong> <img src="https://img.shields.io/github/v/tag/containerscrew/infratools?sort=semver">
 </p>
+
+[![DockerHub Badge](http://dockeri.co/image/containerscrew/infratools)](https://hub.docker.com/r/containerscrew/infratools/)
+
 
 ---
 
