@@ -56,7 +56,7 @@ infratools:
   script:
     - aws --version
     - kubectl version --client
-    #etc...
+    #etc... 
 ```
 
 # Local
