@@ -5,9 +5,6 @@
 </p>
 
 ---
-[![Build and scan 🕷️📦](https://github.com/containerscrew/infratools/actions/workflows/build.yml/badge.svg?event=push)](https://github.com/containerscrew/infratools/actions/workflows/build.yml)
-![Hadolint](https://github.com/containerscrew/infratools/actions/workflows/hadolint.yml/badge.svg)
-[![License](https://img.shields.io/github/license/containerscrew/infratools)](/LICENSE)
 ![Latest Tag](https://img.shields.io/github/v/tag/containerscrew/infratools?sort=semver)
 
 [![DockerHub Badge](http://dockeri.co/image/containerscrew/infratools)](https://hub.docker.com/r/containerscrew/infratools/)
