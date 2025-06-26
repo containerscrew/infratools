@@ -6,7 +6,11 @@
 
 ---
 
-<p align="right">
+![example](./example.png)
+
+---
+
+<p align="left">
   <strong>&gt; <a href="https://hub.docker.com/r/containerscrew/infratools/tags">Available tags</a></strong><br>
   <strong>&gt; Latest tag:</strong> <img src="https://img.shields.io/github/v/tag/containerscrew/infratools?sort=semver">
 </p>
