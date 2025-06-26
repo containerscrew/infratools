@@ -44,6 +44,21 @@ Or just run the container directly, without mapping directories:
 docker run -it --rm --name infratools containerscrew/infratools:v2.9.0
 ```
 
+In a pipeline like `.gitlab-ci.yml`, you can use the image directly:
+
+```yaml
+stages:
+  - deploy
+
+infratools:
+  image: containerscrew/infratools:v2.9.0
+  stage: deploy
+  script:
+    - aws --version
+    - kubectl version --client
+    #etc...
+```
+
 # Local
 
 ```shell
