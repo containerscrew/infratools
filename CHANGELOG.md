@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.9.0] - 2025-06-26
+
+- Update CHANGELOG.md for release v2.8.0
+
+- V2.9.0: Update base image & tools & doc
+
+- Update README.md
+
 ## [2.8.0] - 2025-03-06
 
 - Update CHANGELOG.md for release v2.7.3
