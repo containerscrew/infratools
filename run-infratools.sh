@@ -2,7 +2,7 @@
 
 # Configuration
 CONTAINER_NAME="infratools"
-CONTAINER_VERSION="v2.8.0"
+CONTAINER_VERSION="v2.9.0"
 IMAGE_NAME="docker.io/containerscrew/infratools"
 REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=1"
 
@@ -107,7 +107,7 @@ while getopts "iua" opt; do
             if docker ps --filter "name=^/${CONTAINER_NAME}$" --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
                 attach_container
             else
-                printf "\e[33m[WARNING] No running container found. Starting a new one...\e[0m"
+                printf "\e[33m[WARNING] No running container found. Starting a new one...\e[0m\n"
                 start_container "${CONTAINER_VERSION}"
                 attach_container
             fi
