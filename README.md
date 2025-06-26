@@ -5,12 +5,13 @@
 </p>
 
 ---
-![Latest Tag](https://img.shields.io/github/v/tag/containerscrew/infratools?sort=semver)
 
 [![DockerHub Badge](http://dockeri.co/image/containerscrew/infratools)](https://hub.docker.com/r/containerscrew/infratools/)
 
 
 > **Available tags:** https://hub.docker.com/r/containerscrew/infratools/tags
+> **Latest tag:** ![Latest Tag](https://img.shields.io/github/v/tag/containerscrew/infratools?sort=semver)
+
 ---
 
 # Architecture
