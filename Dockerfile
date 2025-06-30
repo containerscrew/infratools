@@ -1,10 +1,10 @@
 ARG ALPINE_VERSION="3.22.0"
 FROM docker.io/alpine:${ALPINE_VERSION}
 
-ARG HELM_VERSION="3.18.3"
-ARG KUBECTL_VERSION="1.32.0"
-ARG TERRAFORM_VERSION="1.9.5"
-ARG TERRAGRUNT_VERSION="0.82.0"
+ARG HELM_VERSION=3.18.3
+ARG KUBECTL_VERSION=1.33.2
+ARG TERRAFORM_VERSION=1.9.5
+ARG TERRAGRUNT_VERSION=0.82.0
 ARG AWSCLI_VERSION="2.27.25-r0"
 ARG TFTOOLS_VERSION="v0.9.0"
 ENV USERNAME="infratools"
@@ -52,8 +52,10 @@ RUN source /envfile && curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-
     rm -rf linux-${ARCH}
 
 # Kubectl
-RUN source /envfile && curl -sL https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl -o /usr/local/bin/kubectl && \
-    chmod +x /usr/local/bin/kubectl
+RUN source /envfile && \
+    curl -sLO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
 
 # Install tfenv for terraform compatibility
 RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;\
