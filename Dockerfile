@@ -59,7 +59,8 @@ RUN source /envfile && \
 
 # Install tfenv for terraform compatibility
 RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;\
-    ln -s $USER_HOME/.tfenv/bin/* /usr/local/bin
+    ln -s $USER_HOME/.tfenv/bin/* /usr/local/bin ;\
+    chown -R $USERNAME:$USERNAME $USER_HOME/.tfenv/
 
 # Terragrunt
 RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH} -o /usr/bin/terragrunt ;\

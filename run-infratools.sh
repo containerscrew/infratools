@@ -48,7 +48,7 @@ start_container() {
       fi
 
     local CONTAINER_VERSION=${1:-$CONTAINER_LATEST_VERSION}
-    printf "\e[32m[INFO] Starting a new container '${CONTAINER_NAME}'...\e[0m"
+    printf "\e[32m[INFO] Starting a new container '${CONTAINER_NAME}'...\e[0m \n"
     docker run -tid \
         --name "${CONTAINER_NAME}" \
         --rm \
