@@ -6,6 +6,22 @@ All notable changes to this project will be documented in this file.
 
 - Update run-infratools.sh
 
+## [2.10.0] - 2025-06-30
+
+- Update run-infratools.sh
+
+- Update CHANGELOG.md for release v2.9.3
+
+- Update README.md
+
+- Update run-infratools.sh and doc
+
+- Add .env.example file
+
+- Update .env.example file
+
+- Update opentofu version
+
 ## [2.9.3] - 2025-06-30
 
 - Update CHANGELOG.md for release v2.9.2
