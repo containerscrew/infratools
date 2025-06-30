@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.9.2] - 2025-06-30
+
+- Update CHANGELOG.md for release v2.9.1
+
+- Update run-infratools.sh and doc
+
+- Change zsh container history file name
+
 ## [2.9.1] - 2025-06-30
 
 - Update CHANGELOG.md for release v2.9.0
