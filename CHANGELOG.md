@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.9.1] - 2025-06-30
+
+- Update CHANGELOG.md for release v2.9.0
+
+- Update README.md
+
+- Add example & update version in run-infratools.sh
+
+- Add example image
+
+- Fix kubectl installation
+
 ## [2.9.0] - 2025-06-26
 
 - Update CHANGELOG.md for release v2.8.0
