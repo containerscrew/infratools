@@ -69,6 +69,21 @@ infratools:
     #etc...
 ```
 
+Persist variables in a container:
+
+```shell
+cd your-terraform-repo
+mkdir .user/
+touch .user/env
+echo "FOO=BAR" >> .user/env
+# Infratools container will use .user/env file as a --envfile
+run-infratools.sh -a
+echo $FOO
+```
+
+> [!IMPORTANT]
+> Add `.user/env` to your `.gitignore`
+
 # Local
 
 ```shell

@@ -70,7 +70,7 @@ start_container() {
 # Function to attach to the running container
 attach_container() {
     printf "\e[32m[INFO] Attaching to the running container '${CONTAINER_NAME}'...\e[0m"
-    docker exec -ti "${CONTAINER_NAME}" zsh
+    docker exec -ti "${CONTAINER_NAME}" /bin/zsh
 }
 
 # Function to handle updates
@@ -78,7 +78,7 @@ update_container() {
     printf "\e[32m[INFO] Updating container '${CONTAINER_NAME}' to the latest version (${LATEST_VERSION})...\e[0m \n"
     docker stop "${CONTAINER_NAME}" &>/dev/null || true
     start_container "${LATEST_VERSION}"
-    docker exec -ti "${CONTAINER_NAME}" zsh
+    docker exec -ti "${CONTAINER_NAME}" /bin/zsh
 }
 
 # Fetch the current running version
