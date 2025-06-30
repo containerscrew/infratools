@@ -24,3 +24,6 @@ hadolint: ## Run hadolint
 
 generate-changelog: ## Generate changelog using git cliff
 	git cliff --output CHANGELOG.md
+
+install-script: ## Install run-infratools.sh in your PATH
+	sudo cp run-infratools.sh /usr/local/bin 
