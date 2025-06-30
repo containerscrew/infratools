@@ -36,13 +36,19 @@ Create a copy of the script [`run-infratools.sh`](run-infratools.sh) in your rep
 Usage: ./run-infratools.sh [-i (info)] [-u (update)] [-a (attach)]
 ```
 
+Move this script to your bin path, and reuse it in other repos:
+
+```shell
+sudo cp run-infratools.sh /usr/local/bin/
+```
+
 With this script, you can run the container or attach to an existing, update the container to the latest tag version, or get the current version of the container.
 
 > [!IMPORTANT]
 > Running this script, ZSH history will be saved in /code repository to allow persistent command history.
 > So, If you don't want to push the .zsh_history to git, add the file to `.gitignore` in the repo you are using.
 
-Or just run the container directly, without mapping directories:
+Run the container directly, without mapping directories:
 
 ```shell
 docker run -it --rm --name infratools containerscrew/infratools:v2.9.0

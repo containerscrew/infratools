@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 # Configuration
-CONTAINER_NAME="infratools"
+CONTAINER_NAME="$(basename $PWD)"
 CONTAINER_VERSION="v2.9.0"
 IMAGE_NAME="docker.io/containerscrew/infratools"
 REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=1"
@@ -48,7 +48,7 @@ start_container() {
       fi
 
     local CONTAINER_VERSION=${1:-$CONTAINER_LATEST_VERSION}
-    echo -e "\e[32m[INFO] Starting a new container '${CONTAINER_NAME}'...\e[0m"
+    printf "\e[32m[INFO] Starting a new container '${CONTAINER_NAME}'...\e[0m"
     docker run -tid \
         --name "${CONTAINER_NAME}" \
         --rm \
@@ -59,6 +59,9 @@ start_container() {
         -v ~/.kube:/home/infratools/.kube \
         -w /code/ \
         -e AWS_DEFAULT_REGION=eu-west-1 \
+        --dns 10.2.255.1 \
+        --dns 192.168.101.243 \
+        --dns 192.168.101.244 \
         --dns 1.1.1.1 \
         "${ENV_FILE_OPTION[@]}" \
         "${IMAGE_NAME}:${CONTAINER_VERSION}"
