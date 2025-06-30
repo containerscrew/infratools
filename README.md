@@ -85,6 +85,19 @@ Versions of packages and tools are pinned in the [`Dockerfile`](./Dockerfile). T
 > `tfenv` stills works to manage versions of `terraform`.
 > `tofuenv` will be installed in future versions of `infratools` to manage versions of `opentofu`.
 
+If you want to use `terraform` instead of `tofu`:
+
+```shell
+tfenv use 1.9.5 # or the version you want
+# If using Mac Apple Silicion, and want to use amd64 terraform binary
+TFENV_ARCH="amd64" tfenv use 1.9.5
+terragrunt init --tf-path=/usr/local/bin/terraform
+terragrunt plan --tf-path=/usr/local/bin/terraform
+# Or export the variable
+TG_TF_PATH=/usr/local/bin/terraform
+terragrunt plan
+```
+
 # Git config for servers with self signed certificate
 
 If using custom git repository with self signed certificate (eg: terraform modules in a private git server), just edit in your `~/.gitconfig`:
