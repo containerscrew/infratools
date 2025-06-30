@@ -75,7 +75,7 @@ attach_container() {
 
 # Function to handle updates
 update_container() {
-    printf "\e[32m[INFO] Updating container '${CONTAINER_NAME}' to the latest version (${LATEST_VERSION})...\e[0m"
+    printf "\e[32m[INFO] Updating container '${CONTAINER_NAME}' to the latest version (${LATEST_VERSION})...\e[0m \n"
     docker stop "${CONTAINER_NAME}" &>/dev/null || true
     start_container "${LATEST_VERSION}"
     docker exec -ti "${CONTAINER_NAME}" zsh
