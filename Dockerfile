@@ -3,6 +3,7 @@ FROM docker.io/alpine:${ALPINE_VERSION}
 
 ARG HELM_VERSION=3.18.3
 ARG KUBECTL_VERSION=1.33.2
+ARG TOFU_VERSION=v1.10.1
 ARG TERRAFORM_VERSION=1.9.5
 ARG TERRAGRUNT_VERSION=0.82.0
 ARG AWSCLI_VERSION="2.27.25-r0"
@@ -32,14 +33,11 @@ RUN case $(uname -m) in \
     echo "export ARCH=$ARCH" > /envfile && \
     cat /envfile
 
-# Add testing repository
-RUN echo '@community https://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
-
 # Core packages
 RUN apk add --update --no-cache \
-    make ca-certificates zsh zsh-vcs jq zip shadow curl git vim bind-tools python3 py3-pip pipx kubectx \
+    make ca-certificates zsh zsh-vcs jq zip shadow curl git vim bind-tools kubectx \
     openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client-krb5 \
-    pre-commit opentofu@community
+    pre-commit
 
 # Rootless user
 RUN groupadd --gid $USER_GID $USERNAME ;\
@@ -56,6 +54,14 @@ RUN source /envfile && \
     curl -sLO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
+
+# Opentofu
+RUN source /envfile && \
+    wget https://github.com/opentofu/opentofu/releases/download/${TOFU_VERSION}/tofu_${TOFU_VERSION#v}_${ARCH}.apk -O /tmp/tofu.apk && \
+    apk add --no-cache --allow-untrusted /tmp/tofu.apk && \
+    rm -f /tmp/tofu.apk && \
+    tofu --version
+
 
 # Install tfenv for terraform compatibility
 RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;\
