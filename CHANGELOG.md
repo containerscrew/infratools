@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+- Update run-infratools.sh
+
+## [2.9.3] - 2025-06-30
+
+- Update CHANGELOG.md for release v2.9.2
+
+- Update image version in run-iunfratools.sh
+
+- Update Makefile
+
+- Fix tfenv directory permissions
+
 ## [2.9.2] - 2025-06-30
 
 - Update CHANGELOG.md for release v2.9.1
