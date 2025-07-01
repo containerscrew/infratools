@@ -40,12 +40,12 @@ print_info() {
 
 # Function to start the container
 start_container() {
-      ENV_FILE=".user/env"
-      ENV_FILE_OPTION=()
+    ENV_FILE=".user/env"
+    ENV_FILE_OPTION=()
 
-      if [ -f "$ENV_FILE" ]; then
-          ENV_FILE_OPTION=(--env-file "$ENV_FILE")
-      fi
+    if [ -f "$ENV_FILE" ]; then
+        ENV_FILE_OPTION=(--env-file "$ENV_FILE")
+    fi
 
     local CONTAINER_VERSION=${1:-$CONTAINER_LATEST_VERSION}
     printf "\e[32m[INFO] Starting a new container '${CONTAINER_NAME}'...\e[0m \n"
@@ -57,6 +57,7 @@ start_container() {
         -v ~/.ssh:/home/infratools/.ssh \
         -v ~/.aws:/home/infratools/.aws \
         -v ~/.kube:/home/infratools/.kube \
+        "${EXTRA_VOLUMES[@]}" \
         -w /code/ \
         -e AWS_DEFAULT_REGION=eu-west-1 \
         --dns 10.2.255.1 \
@@ -93,8 +94,9 @@ LATEST_VERSION=$(fetch_latest_version)
 # Check prerequisites
 check_prerequisites
 
-# Parse options with getopts
-while getopts "iua" opt; do
+# Parse options with getopts, including -v for extra volumes
+EXTRA_VOLUMES=()
+while getopts "iuav:" opt; do
     case "$opt" in
         i)  # Print info
             print_info
@@ -115,8 +117,16 @@ while getopts "iua" opt; do
                 attach_container
             fi
             ;;
+        v)  # Add extra volume
+            if [[ "$OPTARG" == *:* ]]; then
+                EXTRA_VOLUMES+=("-v" "$OPTARG")
+            else
+                printf "\e[31m[ERROR] Invalid volume mapping. Use -v <host_path>:<container_path>\e[0m\n"
+                exit 1
+            fi
+            ;;
         *)  # Invalid option
-            printf "\e[31m[ERROR] Invalid option. Use -i (info), -u (update), or -a (attach or create).\e[0m"
+            printf "\e[31m[ERROR] Invalid option. Use -i (info), -u (update), -a (attach), or -v <host_path>:<container_path>.\e[0m\n"
             exit 1
             ;;
     esac
@@ -124,5 +134,5 @@ done
 
 # If no options are provided, show usage
 if [[ $OPTIND -eq 1 ]]; then
-    printf "\e[32mUsage: $0 [-i (info)] [-u (update)] [-a (attach or create)]\e[0m"
+    printf "\e[32mUsage: $0 [-i (info)] [-u (update)] [-a (attach or create)] [-v <host_path>:<container_path>]\e[0m\n"
 fi
