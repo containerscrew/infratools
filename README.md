@@ -32,8 +32,14 @@
 Create a copy of the script [`run-infratools.sh`](run-infratools.sh) in your repository and run it.
 
 ```shell
-./run-infratools.sh
-Usage: ./run-infratools.sh [-i (info)] [-u (update)] [-a (attach)]
+/run-infratools.sh
+Usage: /usr/local/bin/run-infratools.sh [-i (info)] [-u (update)] [-a (attach or create)] [-v <host_path>:<container_path>]
+```
+
+Mapping volumes:
+
+```shell
+run-infratools.sh -a -v ~/.lacework.toml:/home/infratools/.lacework.toml
 ```
 
 Move this script to your bin path, and reuse it in other repos:
