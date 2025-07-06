@@ -1,7 +1,7 @@
 <p align="center" >
     <img src="logo.png" alt="logo" width="250"/>
 <h3 align="center">infratools</h3>
-<p align="center">Container image with infra tools (terraform, terragrunt, aws cli, helm, kubectl...). Useful for CI/CD or local deployments.</p>
+<p align="center">Container image with infra tools (tofu, terragrunt, aws cli, helm, kubectl...). Useful for CI/CD or local deployments.</p>
 </p>
 
 ---
