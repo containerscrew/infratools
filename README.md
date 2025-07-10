@@ -27,7 +27,7 @@
 Create a copy of the script [`run-infratools.sh`](run-infratools.sh) in your repository and run it.
 
 ```shell
-/run-infratools.sh
+./run-infratools.sh
 Usage: /usr/local/bin/run-infratools.sh [-i (info)] [-u (update)] [-a (attach or create)] [-v <host_path>:<container_path>]
 ```
 
