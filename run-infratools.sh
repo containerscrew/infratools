@@ -2,7 +2,7 @@
 
 # Configuration
 CONTAINER_NAME="$(basename $PWD)"
-CONTAINER_VERSION="v2.11.2"
+CONTAINER_VERSION="v2.11.3"
 IMAGE_NAME="docker.io/containerscrew/infratools"
 REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=1"
 
