@@ -2,9 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [2.11.0] - 2025-07-11
 
 - Update run-infratools.sh
+
+- Update CHANGELOG.md for release v2.10.0
+
+- Update run-infratools.sh script
+
+- Update README.md
+
+- Remove example image
+
+- Update README
+
+- Fix hadoling warnings
 
 ## [2.10.0] - 2025-06-30
 
