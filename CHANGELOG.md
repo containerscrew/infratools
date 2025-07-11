@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.11.2] - 2025-07-11
+
+- Update CHANGELOG.md for release v2.11.1
+
+- Fix: kube oidc binary name
+
 ## [2.11.1] - 2025-07-11
 
 - Update CHANGELOG.md for release v2.11.0
