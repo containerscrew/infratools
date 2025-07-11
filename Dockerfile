@@ -3,6 +3,7 @@ FROM docker.io/alpine:${ALPINE_VERSION}
 
 ARG HELM_VERSION=3.18.3
 ARG KUBECTL_VERSION=1.33.2
+ARG KUBELOGIN_VERSION="v1.33.0"
 ARG TOFU_VERSION=v1.10.1
 ARG TERRAFORM_VERSION=1.9.5
 ARG TERRAGRUNT_VERSION=0.82.0
@@ -54,6 +55,13 @@ RUN source /envfile && \
     curl -sLO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
+
+# Install kubelogin
+RUN source /envfile && \
+    curl -sLO "https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin_linux_${ARCH}.zip" && \
+    unzip kubelogin_linux_${ARCH}.zip -d /usr/local/bin && \
+    chmod +x /usr/local/bin/kubelogin && \
+    rm kubelogin_linux_${ARCH}.zip
 
 # Opentofu
 RUN source /envfile && \

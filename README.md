@@ -34,7 +34,7 @@ Usage: /usr/local/bin/run-infratools.sh [-i (info)] [-u (update)] [-a (attach or
 Mapping volumes:
 
 ```shell
-run-infratools.sh -a -v ~/.lacework.toml:/home/infratools/.lacework.toml
+./run-infratools.sh -a -v ~/.lacework.toml:/home/infratools/.lacework.toml
 ```
 
 Move this script to your bin path, and reuse it in other repos:
