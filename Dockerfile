@@ -65,7 +65,7 @@ RUN source /envfile && \
 
 # Opentofu
 RUN source /envfile && \
-    wget https://github.com/opentofu/opentofu/releases/download/${TOFU_VERSION}/tofu_${TOFU_VERSION#v}_${ARCH}.apk -O /tmp/tofu.apk && \
+    curl -sL -o /tmp/tofu.apk "https://github.com/opentofu/opentofu/releases/download/${TOFU_VERSION}/tofu_${TOFU_VERSION#v}_${ARCH}.apk" && \
     apk add --no-cache --allow-untrusted /tmp/tofu.apk && \
     rm -f /tmp/tofu.apk && \
     tofu --version
