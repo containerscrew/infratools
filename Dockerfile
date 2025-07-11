@@ -61,6 +61,7 @@ RUN source /envfile && \
     curl -sLO "https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin_linux_${ARCH}.zip" && \
     unzip kubelogin_linux_${ARCH}.zip -d /usr/local/bin && \
     chmod +x /usr/local/bin/kubelogin && \
+    ln -s /usr/local/bin/kubelogin /usr/local/bin/kubectl-oidc-login ;\
     rm kubelogin_linux_${ARCH}.zip
 
 # Opentofu
