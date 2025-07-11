@@ -59,7 +59,9 @@ RUN source /envfile && \
 # Install kubelogin
 RUN source /envfile && \
     curl -sLO "https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin_linux_${ARCH}.zip" && \
-    unzip kubelogin_linux_${ARCH}.zip -d /usr/local/bin/kubectl-oidc_login && \
+    unzip kubelogin_linux_${ARCH}.zip -d /tmp/kubelogin && \
+    cp /tmp/kubelogin/kubelogin /usr/local/bin/kubectl-oidc_login && \
+    rm -rf /tmp/kubelogin && \
     chmod +x /usr/local/bin/kubectl-oidc_login && \
     rm kubelogin_linux_${ARCH}.zip
 
@@ -69,7 +71,6 @@ RUN source /envfile && \
     apk add --no-cache --allow-untrusted /tmp/tofu.apk && \
     rm -f /tmp/tofu.apk && \
     tofu --version
-
 
 # Install tfenv for terraform compatibility
 RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;\
