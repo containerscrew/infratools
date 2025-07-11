@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.11.1] - 2025-07-11
+
+- Update CHANGELOG.md for release v2.11.0
+
+- Update run-infratools.sh script
+
+- Fix: symlink for kube-oidc binary
+
 ## [2.11.0] - 2025-07-11
 
 - Update run-infratools.sh
