@@ -6,21 +6,20 @@
 
 ---
 
-<p align="left">
-  <strong>&gt; <a href="https://hub.docker.com/r/containerscrew/infratools/tags">Available tags</a></strong><br>
-  <strong>&gt; Latest tag:</strong> <img src="https://img.shields.io/github/v/tag/containerscrew/infratools?sort=semver">
-</p>
-
-[![DockerHub Badge](http://dockeri.co/image/containerscrew/infratools)](https://hub.docker.com/r/containerscrew/infratools/)
+![Docker Pulls](https://img.shields.io/docker/pulls/containerscrew/infratools)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/containerscrew/infratools?sort=date)
+![GitHub last commit](https://img.shields.io/github/last-commit/containerscrew/infratools)
+![GitHub issues](https://img.shields.io/github/issues/containerscrew/infratools)
+![GitHub Tag](https://img.shields.io/github/v/tag/containerscrew/infratools)
 
 ---
 
 # Architecture
 
-| Arch    | Supported | Tested |
-|---------|----------|--------|
-| amd64   | ✅        | ✅        |
-| arm64   | ✅         | ✅         |
+| Arch  | Supported | Tested |
+| ----- | --------- | ------ |
+| amd64 | ✅        | ✅     |
+| arm64 | ✅        | ✅     |
 
 # Usage
 
