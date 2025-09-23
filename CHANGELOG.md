@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.12.0] - 2025-09-23
+
+- Update CHANGELOG.md for release v2.11.3
+
+- Update run-infratools.sh script
+
+- Update versions of all the tools
+
 ## [2.11.3] - 2025-07-11
 
 - Update CHANGELOG.md for release v2.11.2
