@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+- Update CHANGELOG
+
 ## [2.12.0] - 2025-09-23
 
 - Update CHANGELOG.md for release v2.11.3
