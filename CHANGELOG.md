@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.12.2] - 2025-10-01
+
+- Update CHANGELOG.md for release v2.12.1
+
+- Rollback release pipeline
+
 ## [2.12.1] - 2025-10-01
 
 - Update CHANGELOG
