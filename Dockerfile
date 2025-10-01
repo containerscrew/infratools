@@ -15,13 +15,23 @@ ENV USER_HOME="/home/infratools"
 ENV PYTHONUNBUFFERED=1
 ENV PATH="${PATH}:${USER_HOME}/.local/bin"
 
-ARG ARCH
-
 # Debug (-x), exit on failure (-e) or variable not declared (-u)
 RUN set -eux
 
 # hadolint ignore=DL3018
 # hadolint global ignore=DL3018,DL4006
+
+# Set architecture
+RUN case $(uname -m) in \
+    x86_64) ARCH=amd64; ;; \
+    armv7l) ARCH=arm; ;; \
+    aarch64) ARCH=arm64; ;; \
+    ppc64le) ARCH=ppc64le; ;; \
+    s390x) ARCH=s390x; ;; \
+    *) echo "un-supported arch, exit ..."; exit 1; ;; \
+    esac && \
+    echo "export ARCH=$ARCH" > /envfile && \
+    cat /envfile
 
 # Core packages
 RUN apk add --update --no-cache \
@@ -34,19 +44,20 @@ RUN groupadd --gid $USER_GID $USERNAME ;\
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/zsh
 
 # Helm
-RUN curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar -xz ;\
+RUN source /envfile && curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar -xz ;\
     mv linux-${ARCH}/helm /usr/bin/helm ;\
     chmod +x /usr/bin/helm ;\
     rm -rf linux-${ARCH}
 
 # Kubectl
-RUN \
+RUN source /envfile && \
     curl -sLO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
 
 # Install kubelogin
-RUN curl -sLO "https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin_linux_${ARCH}.zip" && \
+RUN source /envfile && \
+    curl -sLO "https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin_linux_${ARCH}.zip" && \
     unzip kubelogin_linux_${ARCH}.zip -d /tmp/kubelogin && \
     cp /tmp/kubelogin/kubelogin /usr/local/bin/kubectl-oidc_login && \
     rm -rf /tmp/kubelogin && \
@@ -54,7 +65,8 @@ RUN curl -sLO "https://github.com/int128/kubelogin/releases/download/${KUBELOGIN
     rm kubelogin_linux_${ARCH}.zip
 
 # Opentofu
-RUN curl -sL -o /tmp/tofu.apk "https://github.com/opentofu/opentofu/releases/download/${TOFU_VERSION}/tofu_${TOFU_VERSION#v}_${ARCH}.apk" && \
+RUN source /envfile && \
+    curl -sL -o /tmp/tofu.apk "https://github.com/opentofu/opentofu/releases/download/${TOFU_VERSION}/tofu_${TOFU_VERSION#v}_${ARCH}.apk" && \
     apk add --no-cache --allow-untrusted /tmp/tofu.apk && \
     rm -f /tmp/tofu.apk && \
     tofu --version
@@ -65,7 +77,7 @@ RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;
     chown -R $USERNAME:$USERNAME $USER_HOME/.tfenv/
 
 # Terragrunt
-RUN curl -sL https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH} -o /usr/bin/terragrunt ;\
+RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH} -o /usr/bin/terragrunt ;\
     chmod +x /usr/bin/terragrunt
 
 # Install tftools
