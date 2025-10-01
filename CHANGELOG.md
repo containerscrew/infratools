@@ -2,9 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [2.12.1] - 2025-10-01
 
 - Update CHANGELOG
+
+- Update CHANGELOG.md for release v2.12.0
+
+- Update run-infratools.sh
+
+- Configure Dependabot for Docker updates
+
+- Compiling with native OS
+
+- Update release pipeline: compiling with native OS
 
 ## [2.12.0] - 2025-09-23
 
