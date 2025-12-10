@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.13.0] - 2025-12-10
+
+- Update CHANGELOG.md for release v2.12.2
+
+- Refactor: kubelogin installation using krew
+
 ## [2.12.2] - 2025-10-01
 
 - Update CHANGELOG.md for release v2.12.1
