@@ -13,7 +13,7 @@ ENV USER_UID=1000
 ENV USER_GID=$USER_UID
 ENV USER_HOME="/home/infratools"
 ENV PYTHONUNBUFFERED=1
-ENV PATH="${PATH}:${USER_HOME}/.local/bin"
+ENV PATH="${PATH}:${USER_HOME}/.local/bin:${USER_HOME}/.krew/bin"
 
 # Debug (-x), exit on failure (-e) or variable not declared (-u)
 RUN set -eux
@@ -55,14 +55,13 @@ RUN source /envfile && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
 
-# Install kubelogin
-RUN source /envfile && \
-    curl -sLO "https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin_linux_${ARCH}.zip" && \
-    unzip kubelogin_linux_${ARCH}.zip -d /tmp/kubelogin && \
-    cp /tmp/kubelogin/kubelogin /usr/local/bin/kubectl-oidc_login && \
-    rm -rf /tmp/kubelogin && \
-    chmod +x /usr/local/bin/kubectl-oidc_login && \
-    rm kubelogin_linux_${ARCH}.zip
+# RUN source /envfile && \
+#     curl -sLO "https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin_linux_${ARCH}.zip" && \
+#     unzip kubelogin_linux_${ARCH}.zip -d /tmp/kubelogin && \
+#     cp /tmp/kubelogin/kubelogin /usr/local/bin/kubectl-oidc_login && \
+#     rm -rf /tmp/kubelogin && \
+#     chmod +x /usr/local/bin/kubectl-oidc_login && \
+#     rm kubelogin_linux_${ARCH}.zip
 
 # Opentofu
 RUN source /envfile && \
@@ -85,6 +84,19 @@ RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/cont
 
 # User actions
 USER $USERNAME
+
+# Install krew
+RUN set -x; cd "$(mktemp -d)" && \
+    OS="$(uname | tr '[:upper:]' '[:lower:]')" && \
+    ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && \
+    KREW="krew-${OS}_${ARCH}" && \
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && \
+    tar zxvf "${KREW}.tar.gz" && \
+    ./"${KREW}" install krew && \
+    rm -rf *
+
+# Install kubelogin
+RUN set -x; export PATH="${PATH}:${USER_HOME}/.krew/bin" && kubectl krew install oidc-login
 
 # Install oh my zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
