@@ -46,12 +46,12 @@ With this script, you can run the container or attach to an existing, update the
 
 > [!IMPORTANT]
 > Running this script, ZSH history will be saved in /code repository to allow persistent command history.
-> So, If you don't want to push the .zsh_history to git, add the file to `.gitignore` in the repo you are using.
+> If you run the script, a new file `.zsh_container_history` will be created to persist history. If you don't want to push it to your git repo, add it to `.gitignore`.
 
 Run the container directly, without mapping directories:
 
 ```shell
-docker run -it --rm --name infratools containerscrew/infratools:v3.0.0
+docker run -it --rm --name infratools containerscrew/infratools:3.0.0
 ```
 
 In a pipeline like `.gitlab-ci.yml`, you can use the image directly:
@@ -61,7 +61,7 @@ stages:
   - deploy
 
 infratools:
-  image: containerscrew/infratools:v3.0.0
+  image: containerscrew/infratools:3.0.0
   stage: deploy
   script:
     - aws --version
@@ -94,8 +94,11 @@ make local-build-run
 
 Versions of packages and tools are pinned in the [`Dockerfile`](./Dockerfile). Take a look to the corresponding `tag`.
 
+> [!NOTE]
+> From now on, new releases will be tagged without the letter v at the beginning of the tag. Starting from version 3.0.0, it is no longer used.
+
 > [!IMPORTANT]
-> Starting in version `v3.0.0` `terraform` was removed in favour of `opentofu`, which is a drop-in replacement for `terraform` CLI.
+> Starting in version `v2.9.0` `terraform` was removed in favour of `opentofu`, which is a drop-in replacement for `terraform` CLI.
 > `terragrunt` will detect automatically `tofu` binary.
 > `tfenv` stills works to manage versions of `terraform`.
 > `tofuenv` will be installed in future versions of `infratools` to manage versions of `opentofu`.
