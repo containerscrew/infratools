@@ -23,6 +23,11 @@ source $ZSH/oh-my-zsh.sh
 KUBE_PS1_SYMBOL_ENABLE=true
 KUBE_PS1_SYMBOL_DEFAULT="⎈"
 
+function kube_ps1_cluster_short() {
+  echo "$1" | awk -F'/' '{print $NF}'
+}
+KUBE_PS1_CLUSTER_FUNCTION=kube_ps1_cluster_short
+
 function aws_ps1() {
   local profile="${AWS_PROFILE:-${AWS_DEFAULT_PROFILE}}"
   if [[ -n "$profile" ]]; then
