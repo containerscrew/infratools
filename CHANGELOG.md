@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.1.0 - 2026-05-07
+#### Documentation
+- set new version 3.0.2 - (5fa411b) - containerscrew
+#### Miscellaneous Chores
+- set RPROMPT - (583be7c) - containerscrew
+
+- - -
+
 ## 3.0.2 - 2026-05-07
 #### Bug Fixes
 - update kube ps1 functions - (9170508) - containerscrew
