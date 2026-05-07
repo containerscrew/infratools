@@ -3,7 +3,7 @@ name: Build and scan 🕷️📦
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - '*.*.*'
 
 permissions:
   actions: write
