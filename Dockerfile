@@ -1,12 +1,11 @@
-ARG ALPINE_VERSION="3.22.0"
+ARG ALPINE_VERSION="3.23.0"
 FROM docker.io/alpine:${ALPINE_VERSION}
 
-ARG HELM_VERSION=3.19.0
-ARG KUBECTL_VERSION=1.33.2
-ARG KUBELOGIN_VERSION="v1.33.0"
-ARG TOFU_VERSION=v1.10.6
-ARG TERRAGRUNT_VERSION=0.87.5
-ARG AWSCLI_VERSION="2.27.25-r0"
+ARG HELM_VERSION=4.1.4
+ARG KUBECTL_VERSION=1.35.4
+ARG TOFU_VERSION=v1.11.6
+ARG TERRAGRUNT_VERSION=1.0.3
+ARG AWSCLI_VERSION="2.32.7-r0"
 ARG TFTOOLS_VERSION="v0.9.0"
 ENV USERNAME="infratools"
 ENV USER_UID=1000
@@ -54,14 +53,6 @@ RUN source /envfile && \
     curl -sLO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
-
-# RUN source /envfile && \
-#     curl -sLO "https://github.com/int128/kubelogin/releases/download/${KUBELOGIN_VERSION}/kubelogin_linux_${ARCH}.zip" && \
-#     unzip kubelogin_linux_${ARCH}.zip -d /tmp/kubelogin && \
-#     cp /tmp/kubelogin/kubelogin /usr/local/bin/kubectl-oidc_login && \
-#     rm -rf /tmp/kubelogin && \
-#     chmod +x /usr/local/bin/kubectl-oidc_login && \
-#     rm kubelogin_linux_${ARCH}.zip
 
 # Opentofu
 RUN source /envfile && \
