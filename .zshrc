@@ -36,7 +36,7 @@ function aws_ps1() {
 }
 
 setopt PROMPT_SUBST
-PROMPT='$(kube_ps1)$(aws_ps1) '$PROMPT
+RPROMPT='$(kube_ps1)$(aws_ps1)'
 
 # Exports
 export EDITOR='vim'
