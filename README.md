@@ -51,7 +51,7 @@ With this script, you can run the container or attach to an existing, update the
 Run the container directly, without mapping directories:
 
 ```shell
-docker run -it --rm --name infratools containerscrew/infratools:3.0.1
+docker run -it --rm --name infratools containerscrew/infratools:3.0.2
 ```
 
 In a pipeline like `.gitlab-ci.yml`, you can use the image directly:
@@ -61,7 +61,7 @@ stages:
   - deploy
 
 infratools:
-  image: containerscrew/infratools:3.0.1
+  image: containerscrew/infratools:3.0.2
   stage: deploy
   script:
     - aws --version
