@@ -51,7 +51,7 @@ With this script, you can run the container or attach to an existing, update the
 Run the container directly, without mapping directories:
 
 ```shell
-docker run -it --rm --name infratools containerscrew/infratools:v2.9.0
+docker run -it --rm --name infratools containerscrew/infratools:v3.0.0
 ```
 
 In a pipeline like `.gitlab-ci.yml`, you can use the image directly:
@@ -61,7 +61,7 @@ stages:
   - deploy
 
 infratools:
-  image: containerscrew/infratools:v2.9.0
+  image: containerscrew/infratools:v3.0.0
   stage: deploy
   script:
     - aws --version
@@ -95,7 +95,7 @@ make local-build-run
 Versions of packages and tools are pinned in the [`Dockerfile`](./Dockerfile). Take a look to the corresponding `tag`.
 
 > [!IMPORTANT]
-> Starting in version `v2.9.0` `terraform` was removed in favour of `opentofu`, which is a drop-in replacement for `terraform` CLI.
+> Starting in version `v3.0.0` `terraform` was removed in favour of `opentofu`, which is a drop-in replacement for `terraform` CLI.
 > `terragrunt` will detect automatically `tofu` binary.
 > `tfenv` stills works to manage versions of `terraform`.
 > `tofuenv` will be installed in future versions of `infratools` to manage versions of `opentofu`.
