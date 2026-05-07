@@ -5,13 +5,13 @@ on:
     paths:
       - Dockerfile
     branches:
-      - '*'
+      - "*"
     tags:
-      - '*'
+      - "*"
 
 jobs:
   build:
-    name: Lint Containerfile using Hadolint
+    name: Lint Dockerfile using Hadolint
     runs-on: ubuntu-latest
     steps:
       - name: Git checkout

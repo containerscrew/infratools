@@ -4,9 +4,6 @@ SHELL:=/bin/sh
 help: ## this help
 	@awk 'BEGIN {FS = ":.*?## ";  printf "Usage:\n  make \033[36m<target> \033[0m\n\nTargets:\n"} /^[a-zA-Z0-9_-]+:.*?## / {gsub("\\\\n",sprintf("\n%22c",""), $$2);printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-doctoc: ## Create table of contents with doctoc
-	doctoc .
-
 local-build: ## Build the image using podman
 	docker build -t localhost/infratools:test .
 
@@ -21,9 +18,6 @@ trivy-scan: ## Scan image using trivy
 
 hadolint: ## Run hadolint
 	hadolint Dockerfile
-
-generate-changelog: ## Generate changelog using git cliff
-	git cliff --output CHANGELOG.md
 
 install-script: ## Install run-infratools.sh in your PATH
 	sudo cp run-infratools.sh /usr/local/bin
