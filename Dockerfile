@@ -43,19 +43,19 @@ RUN groupadd --gid $USER_GID $USERNAME ;\
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/zsh
 
 # Helm
-RUN source /envfile && curl -sL https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar -xz ;\
-    mv linux-${ARCH}/helm /usr/bin/helm ;\
+RUN . /envfile && curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz" | tar -xz ;\
+    mv "linux-${ARCH}/helm" /usr/bin/helm ;\
     chmod +x /usr/bin/helm ;\
-    rm -rf linux-${ARCH}
+    rm -rf "linux-${ARCH}"
 
 # Kubectl
-RUN source /envfile && \
+RUN . /envfile && \
     curl -sLO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl" && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
     rm kubectl
 
 # Opentofu
-RUN source /envfile && \
+RUN . /envfile && \
     curl -sL -o /tmp/tofu.apk "https://github.com/opentofu/opentofu/releases/download/${TOFU_VERSION}/tofu_${TOFU_VERSION#v}_${ARCH}.apk" && \
     apk add --no-cache --allow-untrusted /tmp/tofu.apk && \
     rm -f /tmp/tofu.apk && \
@@ -67,7 +67,7 @@ RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;
     chown -R $USERNAME:$USERNAME $USER_HOME/.tfenv/
 
 # Terragrunt
-RUN source /envfile && curl -sL https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH} -o /usr/bin/terragrunt ;\
+RUN . /envfile && curl -sL "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH}" -o /usr/bin/terragrunt ;\
     chmod +x /usr/bin/terragrunt
 
 # Install tftools
@@ -76,7 +76,8 @@ RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/cont
 # User actions
 USER $USERNAME
 
-# Install krew
+# Install krew
+# hadolint ignore=DL3003
 RUN set -x; cd "$(mktemp -d)" && \
     OS="$(uname | tr '[:upper:]' '[:lower:]')" && \
     ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && \
@@ -84,7 +85,7 @@ RUN set -x; cd "$(mktemp -d)" && \
     curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && \
     tar zxvf "${KREW}.tar.gz" && \
     ./"${KREW}" install krew && \
-    rm -rf *
+    rm -rf ./*
 
 # Install kubelogin
 RUN set -x; export PATH="${PATH}:${USER_HOME}/.krew/bin" && kubectl krew install oidc-login
