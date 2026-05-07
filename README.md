@@ -137,6 +137,10 @@ Or skip tls verify, run this inside the container:
 git config --global http.sslVerify false # add this line if needed in run.sh script to run it automatically
 ```
 
+# CHANGELOG
+
+Starting in version `3.0.0` _CHANGELOG.md_ was generated using conventional commits and [`cocogitto`](https://docs.cocogitto.io/).
+
 # LICENSE
 
 `infratools` is distributed under the terms of the [`Apache 2.0`](./LICENSE) license.
