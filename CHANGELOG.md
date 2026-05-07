@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.0.2 - 2026-05-07
+#### Bug Fixes
+- update kube ps1 functions - (9170508) - containerscrew
+#### Miscellaneous Chores
+- rename release stage in pipeline - (f7d9113) - containerscrew
+- exclude .claude dir - (94e9b77) - containerscrew
+- set new version 3.0.1 - (20a5391) - containerscrew
+
+- - -
+
 ## 3.0.1 - 2026-05-07
 #### Bug Fixes
 - kube context & aws profile in prompt - (aa9a7de) - containerscrew
