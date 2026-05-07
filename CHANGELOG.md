@@ -9,6 +9,30 @@ All notable changes to this project will be documented in this file. See [conven
 - kube oidc binary name - (d84cc23) - containerscrew
 - symlink for kube-oidc binary - (c041d12) - containerscrew
 #### Documentation
+- add CHANGELOG section in README.md - (235710b) - containerscrew
+- update version tag reference - (394590b) - containerscrew
+- update README.md - (c04d00c) - containerscrew
+#### Features
+- Upgrade tools to the latest versions - (b5d6fbe) - containerscrew
+#### Miscellaneous Chores
+- **(version)** 3.0.0 - (c2e382d) - containerscrew
+- update release pipeline - (63b0b63) - containerscrew
+- remove old changelog.md - (b4d4ce7) - containerscrew
+- refactor project - (9671082) - containerscrew
+- Add new cog toml file for cocogitto - (fff8158) - containerscrew
+- update container tag in run-infratools.sh - (b6b5b61) - containerscrew
+#### Refactoring
+- kubelogin installation using krew - (c5d03dd) - containerscrew
+
+- - -
+
+## 3.0.0 - 2026-05-07
+#### Bug Fixes
+- hadolint warnings - (3bde39c) - containerscrew
+- kube oidc binary name - (7e41a88) - containerscrew
+- kube oidc binary name - (d84cc23) - containerscrew
+- symlink for kube-oidc binary - (c041d12) - containerscrew
+#### Documentation
 - update version tag reference - (394590b) - containerscrew
 - update README.md - (c04d00c) - containerscrew
 #### Features
