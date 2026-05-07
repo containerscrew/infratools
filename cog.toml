@@ -1,0 +1,26 @@
+from_latest_tag = true
+ignore_merge_commits = true
+ignore_fixup_commits = true
+disable_changelog = false
+disable_bump_commit = false
+branch_whitelist = ["main"]
+skip_untracked = false
+
+pre_bump_hooks = ["cog changelog"]
+
+[git_hooks.pre-commit]
+script = """#!/bin/sh
+pre-commit run -a --show-diff-on-failure
+"""
+
+# [commit_types]
+# feat = { changelog_title = "➕ Additional features" }
+# fix = { changelog_title = "🪲 Releases" }
+
+[changelog]
+path = "CHANGELOG.md"
+authors = [{ username = "containerscrew", signature = "dcrookie" }]
+
+[bump_profiles]
+
+[packages]
