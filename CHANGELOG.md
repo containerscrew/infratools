@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.0.1 - 2026-05-07
+#### Bug Fixes
+- kube context & aws profile in prompt - (aa9a7de) - containerscrew
+#### Miscellaneous Chores
+- format - (5175282) - containerscrew
+
+- - -
+
 ## 3.0.0 - 2026-05-07
 #### Bug Fixes
 - hadolint warnings - (3bde39c) - containerscrew
