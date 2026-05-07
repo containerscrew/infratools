@@ -19,6 +19,20 @@ plugins=(git kube-ps1 kubectl terraform)
 
 source $ZSH/oh-my-zsh.sh
 
+# Kube ps1
+KUBE_PS1_SYMBOL_ENABLE=true
+KUBE_PS1_SYMBOL_DEFAULT="⎈"
+
+function aws_ps1() {
+  local profile="${AWS_PROFILE:-${AWS_DEFAULT_PROFILE}}"
+  if [[ -n "$profile" ]]; then
+    echo " ☁ ${profile}"
+  fi
+}
+
+setopt PROMPT_SUBST
+PROMPT='$(kube_ps1)$(aws_ps1) '$PROMPT
+
 # Exports
 export EDITOR='vim'
 
