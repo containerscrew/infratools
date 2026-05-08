@@ -4,7 +4,7 @@
 CONTAINER_NAME="$(basename $PWD)"
 CONTAINER_VERSION="3.2.0"
 IMAGE_NAME="docker.io/containerscrew/infratools"
-REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=1"
+REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=10"
 
 # Function to check prerequisites
 check_prerequisites() {
@@ -19,7 +19,7 @@ check_prerequisites() {
 # Function to fetch the latest version
 fetch_latest_version() {
     local latest_version
-    latest_version=$(curl -s "$REGISTRY_URL" | jq -r '.results[0].name')
+    latest_version=$(curl -s "$REGISTRY_URL" | jq -r '[.results[].name | select(endswith("-ci") | not)] | first')
     if [[ $? -ne 0 || -z "$latest_version" ]]; then
         echo -e "\e[31m[ERROR] Failed to fetch the latest version. Check your internet connection or 'jq' installation.\e[0m"
         echo "Unknown"
