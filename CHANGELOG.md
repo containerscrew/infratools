@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.2.0 - 2026-05-08
+#### Documentation
+- set new version 3.2.0 - (4e0e84c) - containerscrew
+- set new version 3.1.0 - (b37bcff) - containerscrew
+#### Features
+- creating new lightweight image for ci deployments - (a603bc6) - containerscrew
+
+- - -
+
 ## 3.1.0 - 2026-05-07
 #### Documentation
 - set new version 3.0.2 - (5fa411b) - containerscrew
