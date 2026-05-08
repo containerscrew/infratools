@@ -7,8 +7,8 @@
 ---
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/containerscrew/infratools)
-![Docker Image Size (latest)](https://img.shields.io/docker/image-size/containerscrew/infratools/latest)
-![Docker Image Size (latest-ci)](https://img.shields.io/docker/image-size/containerscrew/infratools/latest-ci)
+![Docker Image Size (full)](https://img.shields.io/docker/image-size/containerscrew/infratools/latest?label=image%20size%20full)
+![Docker Image Size (ci)](https://img.shields.io/docker/image-size/containerscrew/infratools/latest-ci?label=image%20size%20ci)
 ![GitHub last commit](https://img.shields.io/github/last-commit/containerscrew/infratools)
 ![GitHub issues](https://img.shields.io/github/issues/containerscrew/infratools)
 ![GitHub Tag](https://img.shields.io/github/v/tag/containerscrew/infratools)
