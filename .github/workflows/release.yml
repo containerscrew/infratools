@@ -1,4 +1,4 @@
-name: Build and scan 🕷️📦
+name: Release and scan 🕷️📦
 
 on:
   push:
@@ -17,6 +17,8 @@ jobs:
   release:
     name: release
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set_tag.outputs.image_tag }}
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -31,9 +33,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
 
       - name: Set container tag
+        id: set_tag
         run: |
           IMAGE_TAG=$(echo "${{ github.ref }}" | sed 's|.*/||')
           echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_ENV"
+          echo "image_tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Build and push full image
         uses: docker/build-push-action@v6
@@ -60,7 +64,7 @@ jobs:
       - name: Run Trivy vulnerability scanner (full)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}"
+          image-ref: "${{ env.REPOSITORY }}:${{ needs.release.outputs.image_tag }}"
           format: "sarif"
           output: "trivy-results-full.sarif"
           vuln-type: "os,library"
@@ -72,7 +76,7 @@ jobs:
       - name: Run Trivy vulnerability scanner (ci)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}-ci"
+          image-ref: "${{ env.REPOSITORY }}:${{ needs.release.outputs.image_tag }}-ci"
           format: "sarif"
           output: "trivy-results-ci.sarif"
           vuln-type: "os,library"
