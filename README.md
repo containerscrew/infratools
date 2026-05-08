@@ -7,7 +7,8 @@
 ---
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/containerscrew/infratools)
-![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/containerscrew/infratools?sort=date)
+![Docker Image Size (latest)](https://img.shields.io/docker/image-size/containerscrew/infratools/latest)
+![Docker Image Size (latest-ci)](https://img.shields.io/docker/image-size/containerscrew/infratools/latest-ci)
 ![GitHub last commit](https://img.shields.io/github/last-commit/containerscrew/infratools)
 ![GitHub issues](https://img.shields.io/github/issues/containerscrew/infratools)
 ![GitHub Tag](https://img.shields.io/github/v/tag/containerscrew/infratools)
@@ -64,9 +65,28 @@ infratools:
   image: containerscrew/infratools:3.1.0
   stage: deploy
   script:
-    - aws --version
-    - kubectl version --client
+    - terraform init
+    - terraform plan
     #etc...
+```
+
+## CI flavor
+
+A lightweight companion image is published alongside every release under the `-ci` suffix, in the same repository.
+
+Built from the same `Dockerfile` using a separate stage (`--target ci`), it includes only the tools needed for deploy pipelines: `kubectl`, `helm`, `aws-cli`, `jq`, and `curl`. No terraform, no zsh, no local tooling.
+
+```yaml
+stages:
+  - deploy
+
+deploy:
+  image: containerscrew/infratools:3.1.0-ci
+  stage: deploy
+  script:
+    - kubectl version --client
+    - helm version
+    - aws --version
 ```
 
 Persist variables in a container:
@@ -86,8 +106,16 @@ echo $FOO
 
 # Local
 
+Full image:
+
 ```shell
 make local-build-run
+```
+
+CI image:
+
+```shell
+make ci-local-build-run
 ```
 
 # Versioning
@@ -136,6 +164,31 @@ Or skip tls verify, run this inside the container:
 ```shell
 git config --global http.sslVerify false # add this line if needed in run.sh script to run it automatically
 ```
+
+# Release workflow
+
+Releases are managed with [cocogitto](https://docs.cocogitto.io/) using conventional commits.
+
+## Full image
+
+```shell
+# Commit using cog
+cog commit feat -a "add new tool X"
+cog commit fix -a "update kubectl version"
+
+# Bump to a specific version (updates CHANGELOG.md and creates the git tag)
+cog bump --version 3.2.0
+git push origin main --follow-tags
+```
+
+`cog bump --version` updates `CHANGELOG.md`, commits it, and creates the git tag (e.g. `3.2.0`). This triggers `release.yml` and publishes `infratools:3.2.0`.
+
+## CI image
+
+The CI image shares the same version as the full image. Both are built and published automatically from the same git tag via `release.yml`:
+
+- `infratools:3.2.0` — full image
+- `infratools:3.2.0-ci` — CI image
 
 # CHANGELOG
 

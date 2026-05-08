@@ -10,7 +10,7 @@ on:
       - "*"
 
 jobs:
-  build:
+  lint:
     name: Lint Dockerfile using Hadolint
     runs-on: ubuntu-latest
     steps:

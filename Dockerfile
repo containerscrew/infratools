@@ -1,26 +1,11 @@
+# hadolint global ignore=DL3018,DL4006
 ARG ALPINE_VERSION="3.23.0"
-FROM docker.io/alpine:${ALPINE_VERSION}
 
-ARG HELM_VERSION=4.1.4
-ARG KUBECTL_VERSION=1.35.4
-ARG TOFU_VERSION=v1.11.6
-ARG TERRAGRUNT_VERSION=1.0.3
-ARG AWSCLI_VERSION="2.32.7-r0"
-ARG TFTOOLS_VERSION="v0.9.0"
-ENV USERNAME="infratools"
-ENV USER_UID=1000
-ENV USER_GID=$USER_UID
-ENV USER_HOME="/home/infratools"
-ENV PYTHONUNBUFFERED=1
-ENV PATH="${PATH}:${USER_HOME}/.local/bin:${USER_HOME}/.krew/bin"
+# Base stage: shared arch detection
+FROM docker.io/alpine:${ALPINE_VERSION} AS base
 
-# Debug (-x), exit on failure (-e) or variable not declared (-u)
 RUN set -eux
 
-# hadolint ignore=DL3018
-# hadolint global ignore=DL3018,DL4006
-
-# Set architecture
 RUN case $(uname -m) in \
     x86_64) ARCH=amd64; ;; \
     armv7l) ARCH=arm; ;; \
@@ -32,13 +17,57 @@ RUN case $(uname -m) in \
     echo "export ARCH=$ARCH" > /envfile && \
     cat /envfile
 
-# Core packages
+# CI stage: lightweight image for deploy pipelines (kubectl, helm, aws, jq, curl)
+FROM base AS ci
+
+ARG HELM_VERSION=4.1.4
+ARG KUBECTL_VERSION=1.35.4
+ARG AWSCLI_VERSION="2.32.7-r0"
+ENV USERNAME="ci"
+ENV USER_UID=1000
+ENV USER_GID=1000
+ENV USER_HOME="/home/ci"
+
+RUN apk add --update --no-cache \
+    ca-certificates curl jq aws-cli=${AWSCLI_VERSION}
+
+RUN addgroup -g $USER_GID $USERNAME && \
+    adduser -u $USER_UID -G $USERNAME -h $USER_HOME -s /bin/sh -D $USERNAME
+
+RUN . /envfile && curl -sL "https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz" | tar -xz ;\
+    mv "linux-${ARCH}/helm" /usr/bin/helm ;\
+    chmod +x /usr/bin/helm ;\
+    rm -rf "linux-${ARCH}"
+
+RUN . /envfile && \
+    curl -sLO "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${ARCH}/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
+
+USER $USERNAME
+WORKDIR $USER_HOME
+
+# Full stage: complete local toolbox (tofu, terragrunt, zsh, krew...)
+FROM base AS full
+
+ARG HELM_VERSION=4.1.4
+ARG KUBECTL_VERSION=1.35.4
+ARG TOFU_VERSION=v1.11.6
+ARG TERRAGRUNT_VERSION=1.0.3
+ARG AWSCLI_VERSION="2.32.7-r0"
+ARG TFTOOLS_VERSION="v0.9.0"
+ENV USERNAME="infratools"
+ENV USER_UID=1000
+ENV USER_GID=1000
+ENV USER_HOME="/home/infratools"
+ENV PYTHONUNBUFFERED=1
+ENV PATH="${PATH}:${USER_HOME}/.local/bin:${USER_HOME}/.krew/bin"
+
 RUN apk add --update --no-cache \
     make ca-certificates zsh zsh-vcs jq zip shadow curl git vim bind-tools kubectx \
     openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client-krb5 \
     pre-commit
 
-# Rootless user
 RUN groupadd --gid $USER_GID $USERNAME ;\
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/zsh
 
@@ -73,7 +102,6 @@ RUN . /envfile && curl -sL "https://github.com/gruntwork-io/terragrunt/releases/
 # Install tftools
 RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | sh -s -- -v "$TFTOOLS_VERSION"
 
-# User actions
 USER $USERNAME
 
 # Install krew

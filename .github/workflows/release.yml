@@ -30,39 +30,63 @@ jobs:
           username: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
           password: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
 
-      # Step to set Docker tag based on the generated GitHub tag
       - name: Set container tag
-        id: set_tag
         run: |
-          # Extract the tag name from the full reference
           IMAGE_TAG=$(echo "${{ github.ref }}" | sed 's|.*/||')
           echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_ENV"
 
-      - name: Build and push
+      - name: Build and push full image
         uses: docker/build-push-action@v6
         with:
+          target: full
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ env.REPOSITORY }}:latest,${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      - name: Build and push ci image
+        uses: docker/build-push-action@v6
+        with:
+          target: ci
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ env.REPOSITORY }}:latest-ci,${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}-ci
+
   sec:
     name: sec
     runs-on: ubuntu-latest
     needs: release
     continue-on-error: true
     steps:
-      - name: Run Trivy vulnerability scanner
+      - name: Run Trivy vulnerability scanner (full)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "${{env.REPOSITORY}}:${{env.IMAGE_TAG}}"
+          image-ref: "${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}"
           format: "sarif"
-          output: "trivy-results.sarif"
+          output: "trivy-results-full.sarif"
           vuln-type: "os,library"
           ignore-unfixed: false
         env:
           TRIVY_USERNAME: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
           TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
 
-      - name: Upload Trivy scan results to GitHub Security tab
+      - name: Run Trivy vulnerability scanner (ci)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}-ci"
+          format: "sarif"
+          output: "trivy-results-ci.sarif"
+          vuln-type: "os,library"
+          ignore-unfixed: false
+        env:
+          TRIVY_USERNAME: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
+          TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
+
+      - name: Upload Trivy scan results (full)
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: "trivy-results.sarif"
+          sarif_file: "trivy-results-full.sarif"
+
+      - name: Upload Trivy scan results (ci)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results-ci.sarif"
