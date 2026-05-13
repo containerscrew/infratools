@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.3.0 - 2026-05-13
+#### Features
+- remove tftools binary due to critical CVEs - (052b651) - containerscrew
+#### Bug Fixes
+- modify function fetch_latest_tag - (718709b) - containerscrew
+#### Documentation
+- update badges - (bf81096) - containerscrew
+#### Continuous Integration
+- fix release pipeline - (9f33b46) - containerscrew
+#### Miscellaneous Chores
+- update cog.tml - (fef9225) - containerscrew
+- update .gitiginore - (88254d4) - containerscrew
+
+- - -
+
 ## 3.2.0 - 2026-05-08
 #### Documentation
 - set new version 3.2.0 - (4e0e84c) - containerscrew
