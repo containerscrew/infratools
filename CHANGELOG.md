@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.3.1 - 2026-05-13
+#### Bug Fixes
+- update patch version to fix CVE - (a672648) - containerscrew
+
+- - -
+
 ## 3.3.0 - 2026-05-13
 #### Features
 - remove tftools binary due to critical CVEs - (052b651) - containerscrew
