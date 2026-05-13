@@ -1,5 +1,5 @@
 # hadolint global ignore=DL3018,DL4006
-ARG ALPINE_VERSION="3.23.0"
+ARG ALPINE_VERSION="3.23"
 
 # Base stage: shared arch detection
 FROM docker.io/alpine:${ALPINE_VERSION} AS base
@@ -21,14 +21,15 @@ RUN case $(uname -m) in \
 FROM base AS ci
 
 ARG HELM_VERSION=4.1.4
-ARG KUBECTL_VERSION=1.35.4
+ARG KUBECTL_VERSION=1.35.5
 ARG AWSCLI_VERSION="2.32.7-r0"
 ENV USERNAME="ci"
 ENV USER_UID=1000
 ENV USER_GID=1000
 ENV USER_HOME="/home/ci"
 
-RUN apk add --update --no-cache \
+RUN apk upgrade --no-cache && \
+    apk add --no-cache \
     ca-certificates curl jq aws-cli=${AWSCLI_VERSION}
 
 RUN addgroup -g $USER_GID $USERNAME && \
@@ -51,9 +52,9 @@ WORKDIR $USER_HOME
 FROM base AS full
 
 ARG HELM_VERSION=4.1.4
-ARG KUBECTL_VERSION=1.35.4
-ARG TOFU_VERSION=v1.11.6
-ARG TERRAGRUNT_VERSION=1.0.3
+ARG KUBECTL_VERSION=1.35.5
+ARG TOFU_VERSION=v1.11.7
+ARG TERRAGRUNT_VERSION=1.0.4
 ARG AWSCLI_VERSION="2.32.7-r0"
 ENV USERNAME="infratools"
 ENV USER_UID=1000
@@ -62,7 +63,8 @@ ENV USER_HOME="/home/infratools"
 ENV PYTHONUNBUFFERED=1
 ENV PATH="${PATH}:${USER_HOME}/.local/bin:${USER_HOME}/.krew/bin"
 
-RUN apk add --update --no-cache \
+RUN apk upgrade --no-cache && \
+    apk add --no-cache \
     make ca-certificates zsh zsh-vcs jq zip shadow curl git vim bind-tools kubectx \
     openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client-krb5 \
     pre-commit

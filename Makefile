@@ -20,8 +20,11 @@ ci-local-run: ## Run the ci image locally
 
 ci-local-build-run: ci-local-build ci-local-run ## Build and run the ci image locally
 
-trivy-scan: ## Scan image using trivy
-	systemctl --user enable --now podman.socket ;\
+trivy-scan: local-build ## Scan image using trivy
+	trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress localhost/infratools:test 
+
+#trivy-scan: ## Scan image using trivy
+	#systemctl --user enable --now podman.socket ;\
 	trivy image localhost/infratools:test
 
 hadolint: ## Run hadolint
