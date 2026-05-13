@@ -23,4 +23,3 @@ authors = [{ username = "containerscrew", signature = "dcrookie" }]
 
 [bump_profiles]
 
-[packages]
