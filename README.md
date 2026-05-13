@@ -52,7 +52,7 @@ With this script, you can run the container or attach to an existing, update the
 Run the container directly, without mapping directories:
 
 ```shell
-docker run -it --rm --name infratools containerscrew/infratools:3.3.0
+docker run -it --rm --name infratools containerscrew/infratools:3.3.1
 ```
 
 In a pipeline like `.gitlab-ci.yml`, you can use the image directly:
@@ -62,7 +62,7 @@ stages:
   - deploy
 
 infratools:
-  image: containerscrew/infratools:3.3.0
+  image: containerscrew/infratools:3.3.1
   stage: deploy
   script:
     - terraform init
@@ -81,7 +81,7 @@ stages:
   - deploy
 
 deploy:
-  image: containerscrew/infratools:3.2.0-ci
+  image: containerscrew/infratools:3.3.1-ci
   stage: deploy
   script:
     - kubectl version --client
