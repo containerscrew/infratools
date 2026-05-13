@@ -1,205 +1,304 @@
-<p align="center" >
-    <img src="logo.png" alt="logo" width="250"/>
-<h3 align="center">infratools</h3>
-<p align="center">Container image with infra tools (tofu, terragrunt, aws cli, helm, kubectl...). Useful for CI/CD or local deployments.</p>
+<p align="center">
+  <img src="logo.png" alt="infratools logo" width="220"/>
+</p>
+
+<h1 align="center">infratools</h1>
+
+<p align="center">
+  <em>A batteries-included container image for infrastructure work — OpenTofu, Terragrunt, kubectl, Helm, AWS CLI and more.</em>
+  <br/>
+  <strong>Use it in CI/CD pipelines or as a portable local dev shell.</strong>
+</p>
+
+<p align="center">
+  <a href="https://hub.docker.com/r/containerscrew/infratools"><img src="https://img.shields.io/docker/pulls/containerscrew/infratools?logo=docker&logoColor=white" alt="Docker Pulls"/></a>
+  <a href="https://hub.docker.com/r/containerscrew/infratools"><img src="https://img.shields.io/docker/image-size/containerscrew/infratools/latest?label=full%20image&logo=docker&logoColor=white" alt="Full image size"/></a>
+  <a href="https://hub.docker.com/r/containerscrew/infratools"><img src="https://img.shields.io/docker/image-size/containerscrew/infratools/latest-ci?label=ci%20image&logo=docker&logoColor=white" alt="CI image size"/></a>
+  <a href="https://github.com/containerscrew/infratools/releases"><img src="https://img.shields.io/github/v/tag/containerscrew/infratools?label=version&logo=github" alt="Latest version"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/containerscrew/infratools" alt="License"/></a>
+  <a href="https://github.com/containerscrew/infratools/commits/main"><img src="https://img.shields.io/github/last-commit/containerscrew/infratools" alt="Last commit"/></a>
 </p>
 
 ---
 
-![Docker Pulls](https://img.shields.io/docker/pulls/containerscrew/infratools)
-![Docker Image Size (full)](https://img.shields.io/docker/image-size/containerscrew/infratools/latest?label=image%20size%20full)
-![Docker Image Size (ci)](https://img.shields.io/docker/image-size/containerscrew/infratools/latest-ci?label=image%20size%20ci)
-![GitHub last commit](https://img.shields.io/github/last-commit/containerscrew/infratools)
-![GitHub issues](https://img.shields.io/github/issues/containerscrew/infratools)
-![GitHub Tag](https://img.shields.io/github/v/tag/containerscrew/infratools)
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Why infratools?](#why-infratools)
+- [Supported architectures](#supported-architectures)
+- [What's inside](#whats-inside)
+- [Quick start](#quick-start)
+- [Image flavors](#image-flavors)
+  - [Full image](#full-image)
+  - [CI image](#ci-image)
+- [The `run-infratools.sh` helper](#the-run-infratoolssh-helper)
+- [Pipeline examples](#pipeline-examples)
+- [Working with Terraform vs OpenTofu](#working-with-terraform-vs-opentofu)
+- [Self-signed git servers](#self-signed-git-servers)
+- [Local development](#local-development)
+- [Releases & versioning](#releases--versioning)
+- [Changelog](#changelog)
+- [License](#license)
+
+</details>
 
 ---
 
-# Architecture
+## Why infratools?
 
-| Arch  | Supported | Tested |
-| ----- | --------- | ------ |
-| amd64 | ✅        | ✅     |
-| arm64 | ✅        | ✅     |
+Setting up `kubectl`, `helm`, `aws-cli`, `terragrunt` and friends on every laptop and CI runner is tedious and drifts over time. `infratools` packages a curated, version-pinned set of infra tools into a single OCI image you can pull from anywhere.
 
-# Usage
+- **Two flavors** — a lightweight `-ci` image for pipelines, and a full local shell with zsh, krew, fzf, and dev ergonomics.
+- **Multi-arch** — published for both `amd64` and `arm64`.
+- **Pinned versions** — every tool version is declared in the [`Dockerfile`](./Dockerfile) and bumped through conventional commits.
 
-Create a copy of the script [`run-infratools.sh`](run-infratools.sh) in your repository and run it.
+---
+
+## Supported architectures
+
+| Architecture | Supported | Tested |
+| ------------ | :-------: | :----: |
+| `amd64`      |    ✅     |   ✅   |
+| `arm64`      |    ✅     |   ✅   |
+
+---
+
+## What's inside
+
+| Tool                  | Full image | CI image |
+| --------------------- | :--------: | :------: |
+| `kubectl`             |     ✅     |    ✅    |
+| `helm`                |     ✅     |    ✅    |
+| `aws-cli`             |     ✅     |    ✅    |
+| `jq` / `curl`         |     ✅     |    ✅    |
+| `opentofu`            |     ✅     |    —     |
+| `terragrunt`          |     ✅     |    —     |
+| `tfenv`               |     ✅     |    —     |
+| `krew` + `oidc-login` |     ✅     |    —     |
+| `kubectx`             |     ✅     |    —     |
+| `git` / `vim`         |     ✅     |    —     |
+| `zsh` + `oh-my-zsh`   |     ✅     |    —     |
+| `fzf`, `bash`, `make` |     ✅     |    —     |
+| `pre-commit`          |     ✅     |    —     |
+| `docker-cli`          |     ✅     |    —     |
+| `openssh` (krb5)      |     ✅     |    —     |
+
+> [!NOTE]
+> Exact pinned versions live in the [`Dockerfile`](./Dockerfile) under the `ARG` declarations.
+
+---
+
+## Quick start
+
+> [!WARNING]
+> Avoid using `:latest` in real workflows. Tool versions (OpenTofu, Terragrunt, kubectl, Helm…) change between releases and may break compatibility with your modules or state files.
+> Pin an explicit version from [Docker Hub tags](https://hub.docker.com/r/containerscrew/infratools/tags) or [GitHub releases](https://github.com/containerscrew/infratools/tags) — for example `containerscrew/infratools:3.3.1`. The `:latest` tags in the snippets below are shown for brevity only.
+
+Mount your project directory and your local AWS / kube / SSH config so the container can act on your real environment:
 
 ```shell
-./run-infratools.sh
-Usage: /usr/local/bin/run-infratools.sh [-i (info)] [-u (update)] [-a (attach or create)] [-v <host_path>:<container_path>]
+docker run -it --rm \
+  --name infratools \
+  -h infratools \
+  -v "$(pwd):/code" \
+  -v "$HOME/.aws:/home/infratools/.aws" \
+  -v "$HOME/.kube:/home/infratools/.kube" \
+  -v "$HOME/.ssh:/home/infratools/.ssh" \
+  -w /code \
+  containerscrew/infratools:latest
 ```
 
-Mapping volumes:
+> [!TIP]
+> For day-to-day local use, prefer the [`run-infratools.sh`](#the-run-infratoolssh-helper) helper — it wires up these mounts (plus env-file and zsh history persistence) automatically.
 
-```shell
-./run-infratools.sh -a -v ~/.lacework.toml:/home/infratools/.lacework.toml
-```
-
-Move this script to your bin path, and reuse it in other repos:
-
-```shell
-sudo cp run-infratools.sh /usr/local/bin/
-```
-
-With this script, you can run the container or attach to an existing, update the container to the latest tag version, or get the current version of the container.
-
-> [!IMPORTANT]
-> Running this script, ZSH history will be saved in /code repository to allow persistent command history.
-> If you run the script, a new file `.zsh_container_history` will be created to persist history. If you don't want to push it to your git repo, add it to `.gitignore`.
-
-Run the container directly, without mapping directories:
-
-```shell
-docker run -it --rm --name infratools containerscrew/infratools:3.3.1
-```
-
-In a pipeline like `.gitlab-ci.yml`, you can use the image directly:
+Or use the image directly in a pipeline:
 
 ```yaml
-stages:
-  - deploy
-
-infratools:
-  image: containerscrew/infratools:3.3.1
-  stage: deploy
-  script:
-    - terraform init
-    - terraform plan
-    #etc...
-```
-
-## CI flavor
-
-A lightweight companion image is published alongside every release under the `-ci` suffix, in the same repository.
-
-Built from the same `Dockerfile` using a separate stage (`--target ci`), it includes only the tools needed for deploy pipelines: `kubectl`, `helm`, `aws-cli`, `jq`, and `curl`. No terraform, no zsh, no local tooling.
-
-```yaml
-stages:
-  - deploy
-
 deploy:
-  image: containerscrew/infratools:3.3.1-ci
-  stage: deploy
+  image: containerscrew/infratools:latest-ci
   script:
     - kubectl version --client
     - helm version
     - aws --version
 ```
 
-Persist variables in a container:
+---
+
+## Image flavors
+
+### Full image
+
+`containerscrew/infratools:<version>` — the complete toolbox for local development and rich pipelines. Includes OpenTofu, Terragrunt, zsh with oh-my-zsh, krew plugins, and the rest of the table above.
+
+### CI image
+
+`containerscrew/infratools:<version>-ci` — a stripped-down image built from the same `Dockerfile` (`--target ci`). It ships only what most deploy jobs need: `kubectl`, `helm`, `aws-cli`, `jq`, `curl`. No terraform, no zsh, no dev tooling — smaller and faster to pull.
+
+Both flavors are published from the same git tag.
+
+---
+
+## The `run-infratools.sh` helper
+
+For local use, copy [`run-infratools.sh`](run-infratools.sh) into your repo (or your `$PATH`) and run it:
+
+```shell
+./run-infratools.sh
+# Usage: run-infratools.sh [-i (info)] [-u (update)] [-a (attach or create)] [-v <host_path>:<container_path>]
+```
+
+Install it globally so you can reuse it from any repo:
+
+```shell
+sudo cp run-infratools.sh /usr/local/bin/
+```
+
+**Mount additional files** (e.g. credentials):
+
+```shell
+run-infratools.sh -a -v ~/.lacework.toml:/home/infratools/.lacework.toml
+```
+
+**Persist environment variables** across container runs — create a `.user/env` file in your project:
 
 ```shell
 cd your-terraform-repo
-mkdir .user/
-touch .user/env
+mkdir -p .user
 echo "FOO=BAR" >> .user/env
-# Infratools container will use .user/env file as a --envfile
 run-infratools.sh -a
-echo $FOO
+echo "$FOO"   # → BAR
 ```
 
 > [!IMPORTANT]
-> Add `.user/env` to your `.gitignore`
+> The helper persists zsh history in `.zsh_container_history` at the repo root and reads `.user/env` as an env file.
+> Add both to your `.gitignore` to keep them out of version control.
 
-# Local
+---
 
-Full image:
+## Pipeline examples
+
+**GitLab CI** with the full image:
+
+```yaml
+stages:
+  - deploy
+
+infratools:
+  image: containerscrew/infratools:latest
+  stage: deploy
+  script:
+    - tofu init
+    - tofu plan
+```
+
+**GitLab CI** with the slim CI image:
+
+```yaml
+deploy:
+  image: containerscrew/infratools:latest-ci
+  stage: deploy
+  script:
+    - kubectl apply -f manifests/
+    - helm upgrade --install my-release ./chart
+```
+
+> [!TIP]
+> Pin to an explicit version (`:3.3.1` / `:3.3.1-ci`) in production pipelines for reproducible builds.
+
+---
+
+## Working with Terraform vs OpenTofu
+
+> [!IMPORTANT]
+> Since `v2.9.0`, `terraform` has been replaced by [`opentofu`](https://opentofu.org/) — a drop-in CLI replacement. `terragrunt` will auto-detect the `tofu` binary.
+
+If you still need the classic `terraform` CLI, `tfenv` is included:
+
+```shell
+tfenv use 1.9.5
+
+# Apple Silicon hosts wanting the amd64 binary:
+TFENV_ARCH=amd64 tfenv use 1.9.5
+
+# Point terragrunt explicitly at terraform:
+terragrunt init --tf-path=/usr/local/bin/terraform
+# or via env var:
+export TG_TF_PATH=/usr/local/bin/terraform
+terragrunt plan
+```
+
+---
+
+## Self-signed git servers
+
+When pulling modules from a private git server with a self-signed certificate, configure `~/.gitconfig`:
+
+```ini
+[http "https://gitlab.server.internal"]
+  sslCAInfo = /path/to/your/certificate.crt
+  sslVerify = true
+```
+
+Or, inside the container, skip TLS verification (use with care):
+
+```shell
+git config --global http.sslVerify false
+```
+
+---
+
+## Local development
+
+Build and run the **full** image locally:
 
 ```shell
 make local-build-run
 ```
 
-CI image:
+Build and run the **CI** image locally:
 
 ```shell
 make ci-local-build-run
 ```
 
-Trivy image scan:
+Scan the image with Trivy:
 
-```bash
+```shell
 make trivy-scan
 ```
 
-# Versioning
+---
 
-Versions of packages and tools are pinned in the [`Dockerfile`](./Dockerfile). Take a look to the corresponding `tag`.
+## Releases & versioning
 
-> [!NOTE]
-> From now on, new releases will be tagged without the letter v at the beginning of the tag. Starting from version 3.0.0, it is no longer used.
-
-> [!IMPORTANT]
-> Starting in version `v2.9.0` `terraform` was removed in favour of `opentofu`, which is a drop-in replacement for `terraform` CLI.
-> `terragrunt` will detect automatically `tofu` binary.
-> `tfenv` stills works to manage versions of `terraform`.
-> `tofuenv` will be installed in future versions of `infratools` to manage versions of `opentofu`.
-
-If you want to use `terraform` instead of `tofu`:
+Releases are managed with [cocogitto](https://docs.cocogitto.io/) and conventional commits.
 
 ```shell
-tfenv use 1.9.5 # or the version you want
-# If using Mac Apple Silicion, and want to use amd64 terraform binary
-TFENV_ARCH="amd64" tfenv use 1.9.5
-terragrunt init --tf-path=/usr/local/bin/terraform
-terragrunt plan --tf-path=/usr/local/bin/terraform
-# Or export the variable
-TG_TF_PATH=/usr/local/bin/terraform
-terragrunt plan
-```
-
-# Git config for servers with self signed certificate
-
-If using custom git repository with self signed certificate (eg: terraform modules in a private git server), just edit in your `~/.gitconfig`:
-
-```bash
-[http "https://gitlab.server.internal"]
-  ##################################
-  # Self Signed Server Certificate #
-  ##################################
-
-  sslCAInfo = /path/to/your/certificate.crt
-  #sslCAPath = /path/to/selfCA/
-  sslVerify = true # or set to false if you trust
-```
-
-Or skip tls verify, run this inside the container:
-
-```shell
-git config --global http.sslVerify false # add this line if needed in run.sh script to run it automatically
-```
-
-# Release workflow
-
-Releases are managed with [cocogitto](https://docs.cocogitto.io/) using conventional commits.
-
-## Full image
-
-```shell
-# Commit using cog
+# Record commits
 cog commit feat -a "add new tool X"
-cog commit fix -a "update kubectl version"
+cog commit fix  -a "update kubectl version"
 
-# Bump to a specific version (updates CHANGELOG.md and creates the git tag)
+# Bump and tag (updates CHANGELOG.md and creates the git tag)
 cog bump --version 3.2.0
 git push origin main --follow-tags
 ```
 
-`cog bump --version` updates `CHANGELOG.md`, commits it, and creates the git tag (e.g. `3.2.0`). This triggers `release.yml` and publishes `infratools:3.2.0`.
+Pushing the tag triggers `release.yml`, which builds and publishes both flavors:
 
-## CI image
+- `containerscrew/infratools:3.2.0` — full image
+- `containerscrew/infratools:3.2.0-ci` — CI image
 
-The CI image shares the same version as the full image. Both are built and published automatically from the same git tag via `release.yml`:
+> [!NOTE]
+> Starting in `3.0.0`, tags no longer carry the leading `v` (e.g. `3.2.0`, not `v3.2.0`).
 
-- `infratools:3.2.0` — full image
-- `infratools:3.2.0-ci` — CI image
+---
 
-# CHANGELOG
+## Changelog
 
-Starting in version `3.0.0` _CHANGELOG.md_ was generated using conventional commits and [`cocogitto`](https://docs.cocogitto.io/).
+Starting in `3.0.0`, [`CHANGELOG.md`](./CHANGELOG.md) is generated from conventional commits via [cocogitto](https://docs.cocogitto.io/).
 
-# LICENSE
+---
 
-`infratools` is distributed under the terms of the [`Apache 2.0`](./LICENSE) license.
+## License
+
+`infratools` is distributed under the terms of the [Apache 2.0](./LICENSE) license.
