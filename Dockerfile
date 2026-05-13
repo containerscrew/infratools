@@ -55,7 +55,6 @@ ARG KUBECTL_VERSION=1.35.4
 ARG TOFU_VERSION=v1.11.6
 ARG TERRAGRUNT_VERSION=1.0.3
 ARG AWSCLI_VERSION="2.32.7-r0"
-ARG TFTOOLS_VERSION="v0.9.0"
 ENV USERNAME="infratools"
 ENV USER_UID=1000
 ENV USER_GID=1000
@@ -98,9 +97,6 @@ RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;
 # Terragrunt
 RUN . /envfile && curl -sL "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH}" -o /usr/bin/terragrunt ;\
     chmod +x /usr/bin/terragrunt
-
-# Install tftools
-RUN curl --proto '=https' --tlsv1.2 -sSfL https://raw.githubusercontent.com/containerscrew/tftools/main/scripts/install.sh | sh -s -- -v "$TFTOOLS_VERSION"
 
 USER $USERNAME
 
