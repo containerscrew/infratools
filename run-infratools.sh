@@ -19,7 +19,7 @@ check_prerequisites() {
 # Function to fetch the latest version
 fetch_latest_version() {
     local latest_version
-    latest_version=$(curl -s "$REGISTRY_URL" | jq -r '[.results[].name | select(endswith("-ci") | not)] | first')
+    latest_version=$(curl -s "$REGISTRY_URL" | jq -r '[.results[].name | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | first')
     if [[ $? -ne 0 || -z "$latest_version" ]]; then
         echo -e "\e[31m[ERROR] Failed to fetch the latest version. Check your internet connection or 'jq' installation.\e[0m"
         echo "Unknown"
