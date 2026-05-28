@@ -2,6 +2,7 @@
 
 # Configuration
 CONTAINER_NAME="$(basename $PWD)"
+HOSTNAME="$(whoami)"
 CONTAINER_VERSION="3.3.1"
 IMAGE_NAME="docker.io/containerscrew/infratools"
 REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=10"
@@ -52,7 +53,7 @@ start_container() {
     docker run -tid \
         --name "${CONTAINER_NAME}" \
         --rm \
-        -h "${CONTAINER_NAME}" \
+        -h "${HOSTNAME}" \
         -v "$(pwd):/code" \
         -v ~/.ssh:/home/infratools/.ssh \
         -v ~/.aws:/home/infratools/.aws \
