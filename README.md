@@ -92,7 +92,7 @@ Setting up `kubectl`, `helm`, `aws-cli`, `terragrunt` and friends on every lapto
 
 > [!WARNING]
 > Avoid using `:latest` in real workflows. Tool versions (OpenTofu, Terragrunt, kubectl, Helm…) change between releases and may break compatibility with your modules or state files.
-> Pin an explicit version from [Docker Hub tags](https://hub.docker.com/r/containerscrew/infratools/tags) or [GitHub releases](https://github.com/containerscrew/infratools/tags) — for example `containerscrew/infratools:3.3.1`. The `:latest` tags in the snippets below are shown for brevity only.
+> Pin an explicit version from [Docker Hub tags](https://hub.docker.com/r/containerscrew/infratools/tags) or [GitHub releases](https://github.com/containerscrew/infratools/tags) — for example `containerscrew/infratools:3.4.0`. The `:latest` tags in the snippets below are shown for brevity only.
 
 Mount your project directory and your local AWS / kube / SSH config so the container can act on your real environment:
 
@@ -203,7 +203,7 @@ deploy:
 ```
 
 > [!TIP]
-> Pin to an explicit version (`:3.3.1` / `:3.3.1-ci`) in production pipelines for reproducible builds.
+> Pin to an explicit version (`:3.4.0` / `:3.4.0-ci`) in production pipelines for reproducible builds.
 
 ---
 
