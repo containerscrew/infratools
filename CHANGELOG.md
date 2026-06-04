@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.4.0 - 2026-06-04
+#### Features
+- update kubectl version to 1.36.1 - (a0b191c) - containerscrew
+#### Documentation
+- update README.md - (7096f5a) - containerscrew
+- update README.md - (a069c27) - containerscrew
+#### Miscellaneous Chores
+- update container hostname name - (4df0510) - containerscrew
+- change latest_version variable in run-infratools - (9cfaa59) - containerscrew
+- update version in run-infratools - (a1d43d3) - containerscrew
+
+- - -
+
 ## 3.3.1 - 2026-05-13
 #### Bug Fixes
 - update patch version to fix CVE - (a672648) - containerscrew
