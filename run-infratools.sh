@@ -61,10 +61,7 @@ start_container() {
         "${EXTRA_VOLUMES[@]}" \
         -w /code/ \
         -e AWS_DEFAULT_REGION=eu-west-1 \
-        --dns 10.2.255.1 \
-        --dns 192.168.101.243 \
-        --dns 192.168.101.244 \
-        --dns 1.1.1.1 \
+        --dns 1.1.1.1 \ # Add your on-prem custom DNS servers here if needed
         "${ENV_FILE_OPTION[@]}" \
         "${IMAGE_NAME}:${CONTAINER_VERSION}"
 }
