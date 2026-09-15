@@ -144,7 +144,7 @@ For local use, copy [`run-infratools.sh`](run-infratools.sh) into your repo (or 
 
 ```shell
 ./run-infratools.sh
-# Usage: run-infratools.sh [-i (info)] [-u (update)] [-a (attach or create)] [-v <host_path>:<container_path>]
+# Usage: run-infratools.sh [-i (info)] [-u (update)] [-a (attach or create)] [-v <host_path>:<container_path>] [-p <aws-vault profile>]
 ```
 
 Install it globally so you can reuse it from any repo:
@@ -168,6 +168,30 @@ echo "FOO=BAR" >> .user/env
 run-infratools.sh -a
 echo "$FOO"   # → BAR
 ```
+
+**Use `aws-vault` instead of mounting `~/.aws`** — pass a profile with `-p` (or export `AWS_VAULT_PROFILE`):
+
+```shell
+run-infratools.sh -a -p my-account.sysops
+```
+
+With `-p`, the helper wraps `docker run` in `aws-vault exec` and forwards the short-lived
+`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` and `AWS_SESSION_EXPIRATION`
+variables into the container. `~/.aws` is **not** mounted in that mode, so no long-lived
+credentials or profile config ever reach the container. It also makes multi-account work
+explicit: one container per repo, each started against the profile you named.
+
+```shell
+# same laptop, two accounts, two containers
+cd ~/code/platform-prod  && run-infratools.sh -a -p PlatformProduction.sysops
+cd ~/code/tools-prod     && run-infratools.sh -a -p CoreTools.sysops
+```
+
+> [!NOTE]
+> Credentials are baked into the container's environment when it starts, so they expire with the
+> aws-vault session — recreate the container (`docker rm -f <name>` then `run-infratools.sh -a -p ...`)
+> to refresh them. If you are already inside an `aws-vault exec` subshell, the helper detects it
+> (`$AWS_VAULT`) and reuses those credentials rather than nesting, which `aws-vault` rejects.
 
 > [!IMPORTANT]
 > The helper persists zsh history in `.zsh_container_history` at the repo root and reads `.user/env` as an env file.
