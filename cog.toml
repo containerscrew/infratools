@@ -6,8 +6,6 @@ disable_bump_commit = false
 branch_whitelist = ["main"]
 skip_untracked = false
 
-pre_bump_hooks = ["cog changelog"]
-
 [git_hooks.pre-commit]
 script = """#!/bin/sh
 pre-commit run -a --show-diff-on-failure
@@ -22,4 +20,3 @@ path = "CHANGELOG.md"
 authors = [{ username = "containerscrew", signature = "dcrookie" }]
 
 [bump_profiles]
-
