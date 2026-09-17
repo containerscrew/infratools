@@ -3,4 +3,4 @@
 .vscode/
 .zsh_container_history
 .user/
-.claude/
+.claude/settings.local.json
