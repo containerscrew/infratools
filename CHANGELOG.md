@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.5.0 - 2026-09-21
+#### Features
+- bump alpine to 3.24.2, kubectl to 1.37.0, helm to 4.3.0, opentofu to 1.12.6, terragrunt to 1.1.5, aws-cli to 2.34.63-r0; replace krew with a direct kubelogin install for kubectl-oidc_login - (d142c35) - containerscrew
+- aws-vault - (cc42fa1) - containerscrew
+#### Bug Fixes
+- remove duplicate cog changelog hook and dedupe 3.0.0 changelog entry - (387d231) - containerscrew
+#### Documentation
+- drop krew references, document kubelogin directly - (a7aa49b) - containerscrew
+- update README.md - (dcf1a1b) - containerscrew
+#### Miscellaneous Chores
+- update run-infratools.sh to 3.5.0 - (ebdf841) - containerscrew
+- rename CLAUDE.md to AGENTS.md - (f7531bf) - containerscrew
+- add CLAUDE.md and bump-tools skill, untrack only settings.local.json - (bd58edf) - containerscrew
+- update run-infratools.sh - (1d22d09) - containerscrew
+
+- - -
+
 ## 3.4.0 - 2026-06-04
 #### Features
 - update kubectl version to 1.36.1 - (a0b191c) - containerscrew
