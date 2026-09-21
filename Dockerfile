@@ -1,5 +1,5 @@
 # hadolint global ignore=DL3018,DL4006
-ARG ALPINE_VERSION="3.23"
+ARG ALPINE_VERSION="3.24.2"
 
 # Base stage: shared arch detection
 FROM docker.io/alpine:${ALPINE_VERSION} AS base
@@ -20,9 +20,9 @@ RUN case $(uname -m) in \
 # CI stage: lightweight image for deploy pipelines (kubectl, helm, aws, jq, curl)
 FROM base AS ci
 
-ARG HELM_VERSION=4.1.4
-ARG KUBECTL_VERSION=1.36.1
-ARG AWSCLI_VERSION="2.32.7-r0"
+ARG HELM_VERSION=4.3.0
+ARG KUBECTL_VERSION=1.37.0
+ARG AWSCLI_VERSION="2.34.63-r0"
 ENV USERNAME="ci"
 ENV USER_UID=1000
 ENV USER_GID=1000
@@ -48,24 +48,25 @@ RUN . /envfile && \
 USER $USERNAME
 WORKDIR $USER_HOME
 
-# Full stage: complete local toolbox (tofu, terragrunt, zsh, krew...)
+# Full stage: complete local toolbox (tofu, terragrunt, zsh, kubelogin...)
 FROM base AS full
 
-ARG HELM_VERSION=4.1.4
-ARG KUBECTL_VERSION=1.35.5
-ARG TOFU_VERSION=v1.11.7
-ARG TERRAGRUNT_VERSION=1.0.4
-ARG AWSCLI_VERSION="2.32.7-r0"
+ARG HELM_VERSION=4.3.0
+ARG KUBECTL_VERSION=1.37.0
+ARG TOFU_VERSION=v1.12.6
+ARG TERRAGRUNT_VERSION=1.1.5
+ARG KUBELOGIN_VERSION=1.36.4
+ARG AWSCLI_VERSION="2.34.63-r0"
 ENV USERNAME="infratools"
 ENV USER_UID=1000
 ENV USER_GID=1000
 ENV USER_HOME="/home/infratools"
 ENV PYTHONUNBUFFERED=1
-ENV PATH="${PATH}:${USER_HOME}/.local/bin:${USER_HOME}/.krew/bin"
+ENV PATH="${PATH}:${USER_HOME}/.local/bin"
 
 RUN apk upgrade --no-cache && \
     apk add --no-cache \
-    make ca-certificates zsh zsh-vcs jq zip shadow curl git vim bind-tools kubectx \
+    make ca-certificates zsh zsh-vcs jq zip unzip shadow curl git vim bind-tools kubectx \
     openssl envsubst aws-cli=${AWSCLI_VERSION} docker-cli fzf bash fzf openssh-client-krb5 \
     pre-commit
 
@@ -100,21 +101,14 @@ RUN git clone --depth=1 https://github.com/tfutils/tfenv.git $USER_HOME/.tfenv ;
 RUN . /envfile && curl -sL "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_${ARCH}" -o /usr/bin/terragrunt ;\
     chmod +x /usr/bin/terragrunt
 
+# kubelogin, installed as the "oidc-login" kubectl plugin (kubectl-oidc_login)
+RUN . /envfile && \
+    curl -sL -o /tmp/kubelogin.zip "https://github.com/int128/kubelogin/releases/download/v${KUBELOGIN_VERSION}/kubelogin_linux_${ARCH}.zip" && \
+    unzip -qq /tmp/kubelogin.zip -d /tmp/kubelogin && \
+    install -o root -g root -m 0755 /tmp/kubelogin/kubelogin /usr/local/bin/kubectl-oidc_login && \
+    rm -rf /tmp/kubelogin.zip /tmp/kubelogin
+
 USER $USERNAME
-
-# Install krew
-# hadolint ignore=DL3003
-RUN set -x; cd "$(mktemp -d)" && \
-    OS="$(uname | tr '[:upper:]' '[:lower:]')" && \
-    ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" && \
-    KREW="krew-${OS}_${ARCH}" && \
-    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" && \
-    tar zxvf "${KREW}.tar.gz" && \
-    ./"${KREW}" install krew && \
-    rm -rf ./*
-
-# Install kubelogin
-RUN set -x; export PATH="${PATH}:${USER_HOME}/.krew/bin" && kubectl krew install oidc-login
 
 # Install oh my zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
