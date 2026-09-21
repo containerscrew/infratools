@@ -1,0 +1,53 @@
+name: Daily vulnerability scan 🕵️
+
+on:
+  schedule:
+    - cron: "23 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  security-events: write
+
+env:
+  REPOSITORY: docker.io/containerscrew/infratools
+
+jobs:
+  scan:
+    name: scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Trivy vulnerability scanner (full)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "${{ env.REPOSITORY }}:latest"
+          format: "sarif"
+          output: "trivy-results-full.sarif"
+          vuln-type: "os,library"
+          ignore-unfixed: false
+        env:
+          TRIVY_USERNAME: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
+          TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
+
+      - name: Run Trivy vulnerability scanner (ci)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "${{ env.REPOSITORY }}:latest-ci"
+          format: "sarif"
+          output: "trivy-results-ci.sarif"
+          vuln-type: "os,library"
+          ignore-unfixed: false
+        env:
+          TRIVY_USERNAME: ${{ secrets.DOCKERHUB_AUTH_USERNAME }}
+          TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_AUTH_TOKEN }}
+
+      - name: Upload Trivy scan results (full)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results-full.sarif"
+          category: "trivy-full"
+
+      - name: Upload Trivy scan results (ci)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results-ci.sarif"
+          category: "trivy-ci"
