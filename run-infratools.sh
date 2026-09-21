@@ -3,7 +3,7 @@
 # Configuration
 CONTAINER_NAME="$(basename $PWD)"
 HOSTNAME="$(whoami)"
-CONTAINER_VERSION="3.4.0"
+CONTAINER_VERSION="3.5.0"
 IMAGE_NAME="docker.io/containerscrew/infratools"
 REGISTRY_URL="https://registry.hub.docker.com/v2/repositories/containerscrew/infratools/tags?page_size=10"
 
