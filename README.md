@@ -48,7 +48,7 @@
 
 Setting up `kubectl`, `helm`, `aws-cli`, `terragrunt` and friends on every laptop and CI runner is tedious and drifts over time. `infratools` packages a curated, version-pinned set of infra tools into a single OCI image you can pull from anywhere.
 
-- **Two flavors** — a lightweight `-ci` image for pipelines, and a full local shell with zsh, krew, fzf, and dev ergonomics.
+- **Two flavors** — a lightweight `-ci` image for pipelines, and a full local shell with zsh, kubelogin, fzf, and dev ergonomics.
 - **Multi-arch** — published for both `amd64` and `arm64`.
 - **Pinned versions** — every tool version is declared in the [`Dockerfile`](./Dockerfile) and bumped through conventional commits.
 
@@ -74,7 +74,7 @@ Setting up `kubectl`, `helm`, `aws-cli`, `terragrunt` and friends on every lapto
 | `opentofu`            |     ✅     |    —     |
 | `terragrunt`          |     ✅     |    —     |
 | `tfenv`               |     ✅     |    —     |
-| `krew` + `oidc-login` |     ✅     |    —     |
+| `kubelogin` (`kubectl oidc-login`) |     ✅     |    —     |
 | `kubectx`             |     ✅     |    —     |
 | `git` / `vim`         |     ✅     |    —     |
 | `zsh` + `oh-my-zsh`   |     ✅     |    —     |
@@ -128,7 +128,7 @@ deploy:
 
 ### Full image
 
-`containerscrew/infratools:<version>` — the complete toolbox for local development and rich pipelines. Includes OpenTofu, Terragrunt, zsh with oh-my-zsh, krew plugins, and the rest of the table above.
+`containerscrew/infratools:<version>` — the complete toolbox for local development and rich pipelines. Includes OpenTofu, Terragrunt, zsh with oh-my-zsh, kubelogin, and the rest of the table above.
 
 ### CI image
 
