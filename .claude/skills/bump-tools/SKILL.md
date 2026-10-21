@@ -1,6 +1,6 @@
 ---
 name: bump-tools
-description: Bump the Alpine base image and pinned tool versions (helm, kubectl, aws-cli, opentofu, terragrunt) in this infratools Dockerfile, build and smoke-test both image flavors locally, gate on a clean Trivy scan, then cut and push the release via cocogitto. Use when asked to update tool versions, refresh the container image, or ship a new infratools release.
+description: Bump the Alpine base image and pinned tool versions (helm, kubectl, aws-cli, opentofu, terragrunt) in this infratools Dockerfile, build and smoke-test both image flavors locally, gate on a clean Trivy scan, then cut and push the release via cocogitto. Use when asked to update tool versions, refresh the container image, or ship a new infratools release. Also use for vague phrasings, in any language, asking whether anything in this repo is outdated or needs updating.
 ---
 
 # Bump tools and ship a release
