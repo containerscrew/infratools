@@ -16,7 +16,7 @@ independently — check both stages, they can legitimately differ:
 
 - `ALPINE_VERSION` (base stage)
 - `ci` stage: `HELM_VERSION`, `KUBECTL_VERSION`, `AWSCLI_VERSION`
-- `full` stage: `HELM_VERSION`, `KUBECTL_VERSION`, `TOFU_VERSION`, `TERRAGRUNT_VERSION`, `AWSCLI_VERSION`
+- `full` stage: `HELM_VERSION`, `KUBECTL_VERSION`, `TOFU_VERSION`, `TERRAGRUNT_VERSION`, `KUBELOGIN_VERSION`, `AWSCLI_VERSION`
 
 ## 2. Fetch latest available versions
 
@@ -25,6 +25,7 @@ independently — check both stages, they can legitimately differ:
 - kubectl: `curl -s https://dl.k8s.io/release/stable.txt`
 - OpenTofu: `curl -s https://api.github.com/repos/opentofu/opentofu/releases/latest`
 - Terragrunt: `curl -s https://api.github.com/repos/gruntwork-io/terragrunt/releases/latest`
+- kubelogin: `curl -s https://api.github.com/repos/int128/kubelogin/releases/latest`
 - **aws-cli is special**: it's pinned as an Alpine *apk* package (`aws-cli=${AWSCLI_VERSION}`), not upstream's release. The version must exist in that Alpine release's repo — check `https://pkgs.alpinelinux.org/packages?name=aws-cli` for the branch matching `ALPINE_VERSION`, don't just take upstream's latest tag.
 
 Only edit the ARGs that actually changed, minimal diff.
@@ -39,28 +40,43 @@ docker build --target full -t localhost/infratools:test .
 docker build --target ci -t localhost/infratools:test-ci .
 ```
 
-Smoke-test the bumped tools non-interactively, e.g.:
+If `apk` fails with `DNS: transient error` / `SERVFAIL` (the podman machine
+resolver can flake behind the VPN), add `--dns 1.1.1.1` to both builds.
+
+Smoke-test the bumped tools non-interactively. Wrap each command in `sh -c`,
+otherwise the shell passes `kubectl version --client` as a single executable
+name and `docker run` fails with "executable file not found":
 
 ```shell
-docker run --rm localhost/infratools:test kubectl version --client
-docker run --rm localhost/infratools:test helm version
-docker run --rm localhost/infratools:test tofu --version
-docker run --rm localhost/infratools:test terragrunt --version
-docker run --rm localhost/infratools:test aws --version
-docker run --rm localhost/infratools:test-ci kubectl version --client
-docker run --rm localhost/infratools:test-ci aws --version
+for c in "kubectl version --client" "helm version" "tofu --version" \
+         "terragrunt --version" "aws --version" "kubectl-oidc_login --version"; do
+  docker run --rm localhost/infratools:test sh -c "$c"
+done
+for c in "kubectl version --client" "helm version" "aws --version"; do
+  docker run --rm localhost/infratools:test-ci sh -c "$c"
+done
 ```
 
 ## 4. Trivy gate
 
+Scan the two images already built in step 3 (`make trivy-scan` rebuilds the
+image without `--dns` and can fail on a flaky resolver):
+
 ```shell
-make trivy-scan
+trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress localhost/infratools:test
+trivy image --severity HIGH,CRITICAL --exit-code 1 --no-progress localhost/infratools:test-ci
 ```
 
-This fails (`--exit-code 1`) on any HIGH/CRITICAL finding. Treat it as a hard
-gate: if it fails, **stop** — report the flagged packages, and see if a newer
-patch of the affected tool/base clears it before retrying. Don't commit past
-a failing scan.
+This fails on any HIGH/CRITICAL finding. If it fails, **stop** and report the
+flagged packages (target binary, package, installed vs fixed version), and
+see if a newer patch of the affected tool/base clears it before retrying.
+
+Most findings here are Go stdlib / `golang.org/x/*` deps embedded in upstream
+binaries (kubectl, helm, terragrunt, kubelogin), which we can't fix. If every
+tool is already at its latest upstream version and the findings are only
+those embedded deps, report it and let the user decide whether to ship
+anyway: `release.yml`'s own Trivy job is `continue-on-error`, so it won't
+block a real release. Don't decide that for them.
 
 ## 5. Cut and push the release
 
@@ -81,12 +97,14 @@ commit`, never a raw `git commit`.
    is the trigger for a public release), then run `cog bump --auto`. This
    creates the `CHANGELOG.md` update, the `chore(version): X.Y.Z` commit,
    and the git tag.
-5. `git push origin main --follow-tags` — this is what fires `release.yml`
-   and publishes both image flavors to Docker Hub. Do this yourself as the
-   final step; don't stop to ask first — reaching this point already means
-   build + smoke test + Trivy all passed.
+5. `git push origin main --follow-tags`, then `git push origin X.Y.Z`
+   explicitly: `--follow-tags` alone has not pushed the new tag here. The tag
+   push is what fires `release.yml` and publishes both image flavors to
+   Docker Hub. Do this yourself as the final step; don't stop to ask first —
+   reaching this point already means build + smoke test + Trivy passed (or
+   the user explicitly okayed shipping past the Trivy findings).
 
 ## Commit conventions
 
-Follow `CLAUDE.md`: Conventional Commits via `cog commit`, terse, no
+Follow `AGENTS.md`: Conventional Commits via `cog commit`, terse, no
 Claude/AI attribution or co-author lines anywhere in this repo's commits.
