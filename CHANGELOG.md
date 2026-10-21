@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.6.0 - 2026-10-21
+#### Features
+- bump kubectl to 1.37.1, helm to 4.3.1, opentofu to 1.13.1, terragrunt to 1.1.6 - (307a6db) - containerscrew
+- add macOS run script using apple container - (285d601) - containerscrew
+#### Bug Fixes
+- give the release sarif uploads distinct categories, matches trivy-daily.yml - (f277067) - containerscrew
+#### Revert
+- remove macOS apple container script - (85aafa1) - containerscrew
+#### Documentation
+- make bump-tools skill trigger on vague phrasings in any language - (43302dc) - containerscrew
+#### Continuous Integration
+- add daily scheduled trivy scan against published images - (7765361) - containerscrew
+#### Miscellaneous Chores
+- update run-infratools.sh to 3.6.0 - (66f63fb) - containerscrew
+- remove dependabot docker updates, superseded by the bump-tools skill - (092af70) - containerscrew
+
+- - -
+
 ## 3.5.0 - 2026-09-21
 #### Features
 - bump alpine to 3.24.2, kubectl to 1.37.0, helm to 4.3.0, opentofu to 1.12.6, terragrunt to 1.1.5, aws-cli to 2.34.63-r0; replace krew with a direct kubelogin install for kubectl-oidc_login - (d142c35) - containerscrew
