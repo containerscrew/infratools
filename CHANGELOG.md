@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 3.7.0 - 2026-11-06
+#### Features
+- bump alpine to 3.24.4, kubectl to 1.37.2, opentofu to 1.13.9, terragrunt to 1.2.1 - (f0aee69) - containerscrew
+#### Documentation
+- refine bump-tools skill: kubelogin, dns, trivy gate, tag push - (316c2df) - containerscrew
+#### Miscellaneous Chores
+- update run-infratools.sh to 3.7.0 - (b24ee2f) - containerscrew
+
+- - -
+
 ## 3.6.0 - 2026-10-21
 #### Features
 - bump kubectl to 1.37.1, helm to 4.3.1, opentofu to 1.13.1, terragrunt to 1.1.6 - (307a6db) - containerscrew
